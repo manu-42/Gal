@@ -1,16 +1,6 @@
 #include "alphabet.h"
 
 /*
- * Indique si le caractère est une lettre de l'alphabet.
- */
-unsigned char is_letter(char ch) {
-    return ch == EPSILON
-          || ('a' <= ch && ch <= 'z')
-          || ('A' <= ch && ch <= 'Z')
-          || ('0' <= ch && ch <= '9');
-}
-
-/*
  * Renvoie la lettre de rang i de l'alphabet.
  */
 char letter(int i) {
