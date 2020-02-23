@@ -146,15 +146,13 @@ DSTATE *nfa2dfa(NFA nfa) {
         printf(")\n");
         /***/
         for (char ch=next_letter(0); ch != -1; ch=next_letter(ch)) {
-        //for (int i_char=0; i_char<62; i_char++) {
-        //    ch = letter(i_char);
             int i_char = letter_rank(ch);
             LSTSTATES *lst = transition(cur->lst_states, ch);
             lst = eps_cloture(lst);
             int num = num_state(lst, head);
             if (num == -1) {
                 num = nb_states;
-                /***/
+                /***
                 printf("transition %c : Création de l'état %d (", ch, num);
                 for (LSTSTATES *tmp=lst; tmp!=NULL; tmp=tmp->suiv) {
                     printf("%d ", (tmp->s)->num);
@@ -190,7 +188,6 @@ void dfa2file(DSTATE dfa, char *name){
     while (cur != NULL) {
         if (cur->accept) fprintf(fd, "%d [shape=doublecircle];\n", cur->num);
         for (char ch=next_letter(0); ch != -1; ch=next_letter(ch)) {
-        //for (int i_char=0; i_char<62; i_char++) {
             int i_char = letter_rank(ch);
             if ((cur->trans)[i_char] != 0) {
                 fprintf(fd, "%d -> %d [label=%c]\n",
