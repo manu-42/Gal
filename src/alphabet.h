@@ -5,16 +5,6 @@
 #define ALPHABET_LEN 62  // Nombre de lettres de l'alphabet
 
 /*
- * Indique si le caractère est une lettre de l'alphabet.
- */
-//unsigned char is_letter(char ch);
-
-/*
- * Renvoie la lettre de rang i de l'alphabet.
- */
-//char letter(int i);
-
-/*
  * Renvoie
  *     la première lettre de l'alphabet si ch = 0
  *     la lettre suivant ch dans l'alphabet s'il y en a une

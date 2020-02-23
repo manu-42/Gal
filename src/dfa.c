@@ -138,13 +138,13 @@ DSTATE *nfa2dfa(NFA nfa) {
     head->suiv = cur;
     DSTATE *tail = cur;
     while (cur != NULL) {
-        /***/
+        /***
         printf("traitement de l'état %d (", cur->num);
         for (LSTSTATES *tmp=cur->lst_states; tmp!=NULL; tmp=tmp->suiv) {
             printf("%d ", (tmp->s)->num);
         }
         printf(")\n");
-        /***/
+        ***/
         for (char ch=next_letter(0); ch != -1; ch=next_letter(ch)) {
             int i_char = letter_rank(ch);
             LSTSTATES *lst = transition(cur->lst_states, ch);
@@ -158,7 +158,7 @@ DSTATE *nfa2dfa(NFA nfa) {
                     printf("%d ", (tmp->s)->num);
                 }
                 printf(")\n");
-                /***/
+                ***/
                 tail->suiv = new_dfa_state(lst, &nb_states);
                 tail = tail->suiv;
             }

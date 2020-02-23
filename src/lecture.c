@@ -5,6 +5,32 @@
 #include "lecture.h"
 
 /*
+ * Renvoie le nom d'un fichier en enlevant le chemin et l'extension.
+ */
+char *get_filename(char *fullpath) {
+    int istart=0, iend=strlen(fullpath)-1;
+    for (int i=iend; i>=0; i--) {
+        if (fullpath[i] == '/') {
+            istart = i+1;
+            break;
+        }
+    }
+    for (int i=iend; i>=istart; i--) {
+        if (fullpath[i] == '.') {
+            iend = i-1;
+            break;
+        }
+    }
+    int len = (iend-istart+1);
+    char *filename = malloc(sizeof(char) * (len+1));
+    for (int i=0; i<len; i++) {
+        filename[i] = fullpath[istart+i];
+    }
+    filename[len] = '\0';
+    return filename;
+}
+
+/*
  * Indique si le caractère ch est acceptable.
  */
 unsigned char is_accepted(char ch) {

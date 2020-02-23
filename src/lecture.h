@@ -1,13 +1,18 @@
 #ifndef H_LECTURE
 #define H_LECTURE
 
+#include <string.h>
 #include "alphabet.h"
 
 /*
  * Taille maximale de l'expression.
  */
-#define MAX_SIZE_EXP 1000
+#define MAX_SIZE_EXP 1024
 
+/*
+ * Renvoie le nom d'un fichier en enlevant le chemin et l'extension.
+ */
+char *get_filename(char *fullpath);
 /*
  * Lit le fichier nom contenant une expression régulière et la stocke
  * dans exp.

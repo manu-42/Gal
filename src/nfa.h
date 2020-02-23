@@ -4,9 +4,7 @@
 #include "arbre.h"
 #include "pile.h"
 
-#define EPSILON '_'
-#define SPLIT '|'
-#define ACCEPT '~'
+enum {SPLIT, ACCEPT};
 
 /*
  * état d'un automate NFA

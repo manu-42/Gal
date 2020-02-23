@@ -3,13 +3,6 @@
 #include "arbre.h"
 
 /*
-struct node  {
-    char val;
-    struct node *left, *right;
-};
-*/
-
-/*
  * Renvoie la priorité d'un opérateur.
  */
 int priority(char op) {
