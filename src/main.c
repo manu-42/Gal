@@ -62,29 +62,29 @@ int main(int argc, char **args) {
     printf("Conversion en arbre ...\n");
     TREE *tree = malloc(sizeof(TREE));
     to_tree(postfix, tree);
-    char *extname = malloc(sizeof(char) * (strlen(filename)+5));
-    sprintf(extname, "%s.tree", filename); 
+    char *extname = malloc(sizeof(char) * (strlen(filename)+50));
+    sprintf(extname, "dot_src/%s.tree", filename); 
     printf("Création de %s_tree.pdf ...\n", filename);
     tree2file(*tree, extname);
-    char *dotstring = malloc(sizeof(char) * (2*strlen(extname)+30));
-    sprintf(dotstring, "dot -T pdf -o %s_tree.pdf %s", filename, extname);
+    char *dotstring = malloc(sizeof(char) * (2*strlen(extname)+50));
+    sprintf(dotstring, "dot -T pdf -o pdf/%s_tree.pdf %s", filename, extname);
     system(dotstring);
 
     printf("Conversion en NFA ...\n");
     NFA *nfa;
     nfa = tree2nfa(*tree);
-    sprintf(extname, "%s.nfa", filename); 
+    sprintf(extname, "dot_src/%s.nfa", filename); 
     printf("Création de %s_nfa.pdf ...\n", filename);
     nfa2file(*nfa, extname);
-    sprintf(dotstring, "dot -T pdf -o %s_nfa.pdf %s", filename, extname);
+    sprintf(dotstring, "dot -T pdf -o pdf/%s_nfa.pdf %s", filename, extname);
     system(dotstring);
 
     printf("Conversion en DFA ...\n");
     DSTATE *dfa = nfa2dfa(*nfa);
-    sprintf(extname, "%s.dfa", filename); 
+    sprintf(extname, "dot_src/%s.dfa", filename); 
     printf("Création de %s_dfa.pdf ...\n", filename);
     dfa2file(*dfa, extname);
-    sprintf(dotstring, "dot -T pdf -o %s_dfa.pdf %s", filename, extname);
+    sprintf(dotstring, "dot -T pdf -o pdf/%s_dfa.pdf %s", filename, extname);
     system(dotstring);
 }
 
