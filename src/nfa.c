@@ -78,32 +78,33 @@ NFA *tree2nfa(TREE tree) {
 }
 
 /*
- * Fonction récursive pour écrire dans le fichier fd les consignes pour
+ * Procédure récursive pour écrire dans le fichier fd les consignes pour
  * dessiner l'état avec dot.
  * num_state permet de numéroter les noeuds, et d'éviter de traiter
  *           plusieurs fois le même noeud en cas de boucle.
  */
 void state2file(FILE *fd, STATE *s, int *num_state) {
-    if (s == NULL || s->num != -1) return;
+    if (s == NULL || s->num != NOT_VISITED) return;
     s->num = (*num_state)++;
     char ch = s->ch;
-    if (ch == ACCEPT) {
+    if (ch == ACCEPT) { // pas de successeur
         fprintf(fd, "%d [shape=doublecircle];\n", s->num);
         return;
     }
-    state2file(fd, s->suiv, num_state);
-    if (ch == SPLIT || ch == EPSILON) {
+    state2file(fd, s->suiv, num_state); // au moins un successeur
+    if (ch == SPLIT || ch == EPSILON) {  
         fprintf(fd, "%d -> %d;\n", s->num, (s->suiv)->num);
         if (ch == EPSILON) return;
         state2file(fd, s->suiv2, num_state);
         fprintf(fd, "%d -> %d;\n", s->num, (s->suiv2)->num);
         return;
     }
+    // cas "général" : une transition étiqutée par ch
     fprintf(fd, "%d -> %d [label = %c];\n", s->num, (s->suiv)->num, ch);
 }
 
 /*
- * Créée un fichier name et y écrit les consignes pour dessiner
+ * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
  * l'automate nfa avec dot.
  */
 void nfa2file(NFA nfa, char *name) {
@@ -118,8 +119,8 @@ void nfa2file(NFA nfa, char *name) {
     fprintf(fd, "\"\" [shape=none]\n");
     int num_state = 0;
     state2file(fd, nfa.start, &num_state);
-    fprintf(fd, "\"\" -> %d;\n", (nfa.start)->num);
-    state2file(fd, nfa.end, &num_state);  // au cas ou l'état acceptant est isolé
+    fprintf(fd, "\"\" -> %d;\n", (nfa.start)->num);  // état initial
+    state2file(fd, nfa.end, &num_state);  // si l'état acceptant est isolé
     fprintf(fd, "}\n");
     fclose(fd);
 }

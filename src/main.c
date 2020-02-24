@@ -29,20 +29,18 @@ int main(int argc, char **args) {
     printf("Postfix : '%s'\n", postfix);
 
     printf("Conversion en arbre ...\n");
-    TREE *tree = malloc(sizeof(TREE));
-    to_tree(postfix, tree);
+    TREE tree = npi_to_tree(postfix);
     char *extname = malloc(sizeof(char) * (strlen(filename)+50));
-    sprintf(extname, "dot_src/%s.tree", filename); 
+    sprintf(extname, "dot_src/%s.tree", filename);
     printf("Création de %s_tree.pdf ...\n", filename);
-    tree2file(*tree, extname);
+    tree2file(tree, extname);
     char *dotstring = malloc(sizeof(char) * (2*strlen(extname)+50));
     sprintf(dotstring, "dot -T pdf -o pdf/%s_tree.pdf %s", filename, extname);
     system(dotstring);
 
     printf("Conversion en NFA ...\n");
-    NFA *nfa;
-    nfa = tree2nfa(*tree);
-    sprintf(extname, "dot_src/%s.nfa", filename); 
+    NFA *nfa = tree2nfa(tree);
+    sprintf(extname, "dot_src/%s.nfa", filename);
     printf("Création de %s_nfa.pdf ...\n", filename);
     nfa2file(*nfa, extname);
     sprintf(dotstring, "dot -T pdf -o pdf/%s_nfa.pdf %s", filename, extname);
@@ -50,11 +48,20 @@ int main(int argc, char **args) {
 
     printf("Conversion en DFA ...\n");
     DSTATE *dfa = nfa2dfa(*nfa);
-    sprintf(extname, "dot_src/%s.dfa", filename); 
+    sprintf(extname, "dot_src/%s.dfa", filename);
     printf("Création de %s_dfa.pdf ...\n", filename);
     dfa2file(*dfa, extname);
     sprintf(dotstring, "dot -T pdf -o pdf/%s_dfa.pdf %s", filename, extname);
     system(dotstring);
-}
+
+/*
+    printf("Minimisation du DFA ...\n");
+    DMINSTATE *dfamin = dfa2min(*nfa);
+    sprintf(extname, "dot_src/%s.dfa", filename);
+    printf("Création de %s_dfa.pdf ...\n", filename);
+    dfa2file(*dfa, extname);
+    sprintf(dotstring, "dot -T pdf -o pdf/%s_dfa.pdf %s", filename, extname);
+    system(dotstring);
+*/}
 
 

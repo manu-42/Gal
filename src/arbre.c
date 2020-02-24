@@ -118,7 +118,8 @@ int tree2file_rec(FILE *fd, TREE tree, int *num_node) {
 }
 
 /*
- * Écrit dans le fichier fd les consignes pour dessiner l'abre avec dot.
+ * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
+ * l'abre avec dot.
  */
 void tree2file(TREE tree, char *name) {
     FILE *fd = fopen(name, "w");
@@ -126,7 +127,7 @@ void tree2file(TREE tree, char *name) {
         fprintf(stderr, "Erreur à la création du %s.\n", name);
         perror("tree2file");
         exit(EXIT_FAILURE);
-    }    
+    }
     int num_node = 0;
     fprintf(fd, "graph T {\n");
     fprintf(fd, "node [shape=circle];\n");
@@ -136,14 +137,11 @@ void tree2file(TREE tree, char *name) {
 }
 
 /*
- * Détermine l'arbre syntaxique correspondant à une expression src en
- * notation postfixée.
+ * Renvoie l'arbre syntaxique correspondant à une expression src en
+ * notation polonaise inversée.
  */
-void to_tree(char *src, TREE *tree) {
-    if (src[0] == '\0') { // langage vide
-        tree = NULL;
-        return;
-    }
+TREE npi_to_tree(char *src) {
+    if (src[0] == '\0') return NULL;  // langage vide
     PILE p = create_PILE();
     for (int i=0; src[i] != '\0'; i++) {
         char ch = src[i];
@@ -164,9 +162,10 @@ void to_tree(char *src, TREE *tree) {
             if (isEmpty(p)) erreur_exp("syntaxe", src);
             nd->left = pop_tree(&p);
         }
-        push_tree(&p, nd);      
+        push_tree(&p, nd);
     }
-    *tree = pop_tree(&p);
+    TREE tree = pop_tree(&p);
     if (!isEmpty(p)) erreur_exp("syntaxe", src);
+    return tree;
 }
 

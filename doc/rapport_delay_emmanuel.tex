@@ -1,13 +1,44 @@
-\documentclass[algo]{cours}
+\documentclass[12pt, a4paper]{article}
 
-\title{\textbf{\textsc{Projet -- Générateur d'analyseur lexical}}}
-\newcommand{\classe}{DELAY Emmanuel}
-\author{}
+\usepackage[algo]{raccourcis}
 
-%\corrigetrue
+\usepackage[hmargin=2cm, vmargin=1cm, includeheadfoot,headsep=1cm,footskip=1cm]{geometry}
 
+\title{\textbf{\textsc{Projet compilation-- Générateur d'analyseur lexical}}}
+\author{Delay Emmanuel}
+\date{\today}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{lastpage}
+\lhead{}
+\chead{\thetitle}
+\rhead{}
+\lfoot{}
+\cfoot{\thepage / \pageref*{LastPage}}
+\rfoot{\theauthor}
+
+\makeatletter
+\renewcommand{\maketitle}{%
+  \thispagestyle{plain}
+  \begin{center}%
+  \let \footnote \thanks
+    {\LARGE \@title \par}%
+    \vskip 1.5em%
+    {\large \@author}%
+    \vskip 1.5em%
+    {\large \@date}%
+  \end{center}%
+  \par
+  \vskip 1.5em}
+\makeatother
 
 \begin{document}
+
+\maketitle
+
+\tableofcontents
+
 %1) un rappel du cahier des charges et un bilan rapide de ce qui a était fait par rapport à celui-ci ;
 
 \section{Le cahier des charges}
@@ -15,12 +46,14 @@
 L'objectif du projet était de réaliser générateur d'analyse lexicale (Gal). Pour cela, plusieurs étapes sont nécessaires, et ont été découpées dans plusieurs fichiers :
 \begin{enumerate}
 \item lire le fichier d'entrée :  \href{../src/lecture.h}{lecture.h} et  \href{../src/lecture.c}{lecture.c}
-\item construction de l'arbre de syntaxe abstraite :  \href{../src/arbre.h}{arbre.h} et  \href{../src/arbre.c}{arbre.c}
+\item construction de l'arbre de syntaxe abstraite :  \href{../src/arbre.h}{arbre.h} et  \href{../src/arbre.c}{arbre.c}.
 \item construction de l'automate fini non déterministe :  \href{../src/nfa.h}{nfa.h} et  \href{../src/nfa.c}{nfa.c}
 \item construction de l'automate fini déterministe :  \href{../src/dfa.h}{dfa.h} et  \href{../src/dfa.c}{dfa.c}
 \item construction de l'automate fini déterministe minimal :  \href{../src/dfa_min.h}{dfa\_min.h} et  \href{../src/dfa_min.c}{dfa\_min.c} TODO
 \item génération du code source de l'analyseur lexicale TODO
 \end{enumerate}
+
+On demandait de plus des représentations graphiques, qui sont créées dans le répertoire \texttt{pdf} en reprenant le nom du fichier passé en paramètre en lui ajoutant un suffixe \texttt{\_tree} pour l'arbre de syntaxe abstraite, \texttt{\_nfa} pour l'automate non déterministe, \texttt{\_dfa} pour le déterministe et \texttt{\_min} pour le déterministe minimal.
 
 %2) une explication plus précise de ce qui a été fait, comment (quelles structures de données, quels algorithmes) ;
 \section{Lecture du fichier et alphabet}
@@ -41,8 +74,6 @@ Le fichier \texttt{lecture.c} contient les fonctions de lecture et de traitement
 \section{Construction de l'arbre de syntaxe abstraite}
 
 \subsection{Notation polonaise inversée}
-
-Pour construire l'arbre de syntaxe abstraite, après avoir un peu reformaté la chaîne grâce à la fonction \texttt{add\_concat} décrite plus haut, j'ai choisi de passer par une écriture en notation polonaise inversée (NPI) en utilisant l'algorithme \ref{Shunting-yard} (fonction \texttt{to\_postfix}).
 
 \begin{algorithm}[h]
 \caption{Algorithme de passage en notation polonaise inversée (Shunting-yard)}
@@ -71,9 +102,9 @@ Créer une \texttt{pile} vide\;
 }
 \end{algorithm}
 
-\subsection{Construction de l'arbre}
+Pour construire l'arbre de syntaxe abstraite, après avoir un peu reformaté la chaîne grâce à la fonction \texttt{add\_concat} décrite plus haut, j'ai choisi de passer par une écriture en notation polonaise inversée (NPI) en utilisant l'algorithme \ref{Shunting-yard} (procédure \texttt{to\_postfix}).
 
-Ensuite, on construit l'arbre à partir de cette expression par l'algorithme \ref{arbre} (fonction \texttt{to\_tree}). Pour cela, un arbre (TREE) est un pointeur vers un nœud (NODE), lui même composé d'un caractère \texttt{val} indiquant le contenu du nœud, et de deux pointeurs \texttt{left} vers \texttt{right} vers les éventuels fils gauche et droit. 
+\subsection{Construction de l'arbre}
 
 \begin{algorithm}[h]
 \caption{Algorithme de création de l'arbre de syntaxe abstraite}
@@ -92,7 +123,7 @@ Créer une pile vide\;
 		}
 	\Sinon(\tcp*[h]{opérateur binaire}){
 		dépiler les deux derniers arbres\;
-		le mettre comme fils gauche et droit de \texttt{nd}\;
+		les mettre comme fils droit et gauche de \texttt{nd}\;
 		}
 	empiler \texttt{nd}\;
 	}
@@ -101,9 +132,80 @@ dépiler dans \texttt{tree}\;
 }
 \end{algorithm}
 
-Pour ces deux étapes, on utilise une pile (implémentée dans \texttt{pile.c}) soit comme pile de caractères (avec les fonctions \texttt{push\_char}, \texttt{pop\_char} et \texttt{sommet\_char} implémentée dans \texttt{pile.c}), soit comme pile d'arbres (avec \texttt{push\_tree}, \texttt{pop\_tree} et \texttt{sommet\_tree} de \texttt{arbre.c}).
+Ensuite, on construit l'arbre à partir de cette expression par l'algorithme \ref{arbre} (procédure \texttt{to\_tree}). Pour cela, un arbre (TREE) est un pointeur vers un nœud (NODE), lui même composé d'un caractère \texttt{val} indiquant le contenu du nœud, et de deux pointeurs \texttt{left} et \texttt{right} vers les éventuels fils gauche et droit. 
+
+Pour ces deux étapes, on utilise une pile (implémentée dans \texttt{pile.c}) soit comme pile de caractères (avec les fonctions \texttt{push\_char}, \texttt{pop\_char} et \texttt{sommet\_char} implémentées dans \texttt{pile.c}), soit comme pile d'arbres (avec \texttt{push\_tree}, \texttt{pop\_tree} et \texttt{sommet\_tree} de \texttt{arbre.c}).
+
+\subsection{Représentation graphique}
+
+La procédure \texttt{tree2file} commence par écrire l'en-tête d'un fichier qui pourra être converti en pdf grâce à \texttt{dot}. Ensuite, elle appelle une fonction récursive \texttt{tree2file\_rec} qui ajoute les consignes de dessin de chaque nœud en lui associant un numéro qu'elle renvoie. Elle peut ainsi dessiner un arc vers les éventuels fils gauche et droit.
+
 
 \section{Construction de l'automate fini non déterministe (NFA)}
+
+\subsection{État d'un automate NFA}
+
+La plus grande difficulté pour moi a été de trouver une structure adaptée au problème. Au début, j'avais réfléchi en terme d'automate fini quelconque, et donc je pensais à une liste chaînée d'états, chaque état ayant une liste de successeurs. Mais je n'arrivais pas à voir comment appliquer l'algorithme du cours à cette structure.
+
+En relisant ce dernier, j'ai fini par réagir que dans l'automate obtenu, chaque nœud avait au plus deux successeurs. De plus, le seul cas où il en avait deux était le cas où les deux correspondaient à une $\varepsilon$-transition et le seul cas où il n'y en a pas est le cas de l'état acceptant final. J'ai donc implémenté un état DFA par une structure STATE ayant 4 champs :
+\begin{description}
+\item[num :] initialisé à NOT\_VISITED. Le numéro de l'état sera attribué au moment de la représentation graphique, ce qui permettra d'éviter de traiter plusieurs fois le même nœud.
+\item[ch :] un caractère définissant la nature de l'état. Si \texttt{ch} est une lettre de l'alphabet ou EPSILON, il n'y a qu'une arête sortante étiquetée par \texttt{ch}, si $\texttt{ch}=SPLIT$, il y a deux arêtes sortantes étiquetées par EPSILON, et si $\texttt{ch}=ACCEPT$ alors il n'y a pas d'arête sortante et l'état est acceptant.
+\item[suiv et suiv2 : ] des pointeurs vers les éventuels successeurs.
+\end{description}
+
+\subsection{Création du NFA}
+
+En implémentant un automate DFA comme une structure à deux champs : un pointeur \texttt{start} vers son état initial et un pointeur \texttt{end} vers son état final, on peut appliquer de façon complètement immédiate l'algorithme de McNaughton - Yamada - Thompson donné dans le cours. C'est ce que fait la fonction \texttt{tree2nfa}.
+
+\subsection{Représentation graphique}
+
+Là aussi, le procédure \texttt{nfa2file} commence par écrire l'en-tête avant d'appeler une procédure récursive \texttt{state2file} qui ajoute les consignes de dessin de chaque nœud en lui associant un numéro.
+
+On utilise aussi le numéro pour repérer les états déjà traités : il ne faut traiter que ceux dont le numéro est encore NOT\_VISITED.
+
+Dans le cas du langage vide, l'état acceptant est isolé et ne sera alors pas atteint par \texttt{state2file}. On l'ajoute donc à la fin du fichier créé.
+
+\section{Construction de l'automate fini déterministe (DFA)}
+
+\subsection{État d'un automate DFA}
+
+La difficulté ici était d'identifier un état du DFA grâce à un ensemble d'états de NFA. Pour ça, j'ai commencé par implémenter une structure LSTSTATES correspondant à une liste chaînée ordonnée d'états NFA. L'intérêt était de pouvoir assez rapidement (en temps linéaire par rapport au nombre d'états) ajouter un nouvel état sans répétition et comparer deux listes LSTSTATES pour savoir si elles sont égales ou pas. C'est ce que font les deux fonctions \texttt{add\_state} et \texttt{cmp\_lst\_states}.
+
+On peut alors représenter un état du DFA par une structure DSTATE ayant 5 champs:
+
+\begin{description}
+\item[lst\_states :] la liste ordonnée d'états du NFA décrite ci-dessus.
+\item[num :] le numéro de l'état.
+\item[trans :] un tableau de ALPHABET\_LEN entiers donnant les numéros des états vers lesquels il existe une transition depuis l'état courant. L'indice du tableau correspond au rang dans l'alphabet de la lettre étiquetant la transition.
+\item[accept :] indique si l'état est acceptant ou non. Ce champs est déterminé en regardant si la liste \texttt{lst\_states} contient un état acceptant ou pas.
+\item[suiv :] un pointeur vers l'état suivant à explorer dans l'application de l'algorithme du cours.
+\end{description}
+
+La fonction \texttt{new\_dfa\_state} permet de construire et renvoyer un tel état.
+
+
+\subsection{Création du DFA}
+
+Pour appliquer l'algorithme du cours, j'ai commencé par écrire une procédure récursive \texttt{eps\_cloture\_single} déterminant l'$\varepsilon$-clôture d'un état \texttt{s} en l'ajoutant à une liste ordonnée d'états \texttt{cloture}. Le principe est d'essayer d'ajouter \texttt{s} à \texttt{cloture} et, s'il n'est pas déjà présent, à ajouter récursivement ses successeurs atteignables par $\varepsilon$-transition.
+
+J'ai pu alors écrire une fonction \texttt{eps\_cloture} prenant en paramètre une liste d'états et déterminant la réunion des $\varepsilon$-clôture de ses états en appelant \texttt{eps\_cloture\_single} pour chacun d'eux.
+
+De même, la fonction \texttt{transition} parcours l'ensemble des états de LSTSTATES passée en paramètre, et les ajoute à une LSTSTATES \texttt{trans} si ils correspondent à une transition étiquetée par le caractère \texttt{ch}.
+
+Enfin, une autre fonction utile pour appliquer l'algorithme du cours est la fonction \texttt{num\_state} qui parcours l'ensemble des états DFA créés jusqu'à maintenant, et renvoie le numéro de l'état DFA correspondant à la LSTSTATES \texttt{lst} passée en paramètre, ou $-1$ si aucun état ne correspond. 
+
+L'application de l'algorithme du cours se fait alors presque mot à mot, en utilisant les fonctions définies dans \texttt{alphabet.h} pour parcourir l'ensemble des lettres de l'alphabet. La seule différence est que j'initialise la liste d'états du DFA par un état puits au lieu de l'$\varepsilon$-transition de l'état initial du NFA. L'intérêt de cet état sera décrit en \ref{dfa_graph}.
+
+
+\subsection{Représentation graphique}
+\label{dfa_graph}
+
+Ici, la représentation graphique ne pose pas réellement de problème. Il suffit de parcourir la liste des états, et pour chacun le tableau de transitions. La seule précaution pour avoir un graphique lisible est de sauter l'état puits ainsi que toutes les transitions qui pointent vers lui. Ça permet de ne pas faire apparaître les transitions étiquetées pas des lettres qui ne sont pas concrètement utilisées dans l'expression régulière fournie en entrée. Le fait que l'état puits soit toujours l'état de numéro 0 simplifie cette étape.
+
+\section{Minimisation du DFA}
+
+
 
 %3) une explication de comment vous savez que ce que vous avez fait fonctionne correctement (quels tests, développer votre réflexion qui a abouti au jeu de tests choisi) ;
 %4) un exposé des difficultés rencontrées et des moyens mis en œuvre pour y répondre.

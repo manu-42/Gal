@@ -36,7 +36,7 @@ typedef struct nfa {
 NFA *tree2nfa(TREE tree);
 
 /*
- * Créée un fichier name et y écrit les consignes pour dessiner
+ * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
  * l'automate nfa avec dot.
  */
 void nfa2file(NFA nfa, char *name);

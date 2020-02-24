@@ -18,13 +18,14 @@ typedef struct node  {
 void to_postfix(char *entry, char *postfix);
 
 /*
- * Détermine l'arbre syntaxique correspondant à une expression src en
- * notation postfixée.
+ * Renvoie l'arbre syntaxique correspondant à une expression src en
+ * notation polonaise inversée.
  */
-void to_tree(char *src, TREE *tree);
+TREE npi_to_tree(char *src);
 
 /*
- * Écrit dans le fichier fd les consignes pour dessiner l'abre avec dot.
+ * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
+ * l'abre avec dot.
  */
 void tree2file(TREE tree, char *name);
 

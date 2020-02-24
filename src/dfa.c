@@ -113,6 +113,7 @@ DSTATE *new_dfa_state(LSTSTATES *lst_states, int *nb_states) {
 /*
  * Renvoie le numéro d'un état DFA correspondant à la liste d'états NFA
  * lst. Si aucun ne correspond, renvoie -1.
+ * dstate doit être un pointeur vers la tête de la liste d'états DFA créés.
  */
 int num_state(LSTSTATES *lst, DSTATE *dstate) {
     while (dstate != NULL) {
