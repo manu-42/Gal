@@ -19,7 +19,7 @@ typedef struct lststates {
  * trans est un tableau de pointeurs vers les états DFA accessibles
  *     depuis l'état courant
  * accept indique si l'état est acceptant ou non
- * suiv est un pointeur sur l'état suivant à traiter 
+ * suiv est un pointeur sur l'état suivant à traiter
  */
 typedef struct dstate {
     LSTSTATES *lst_states;
@@ -32,11 +32,11 @@ typedef struct dstate {
 /*
  * Construit un DFA en partant du NFA nfa, et renvoie son état initial.
  */
-DSTATE *nfa2dfa(NFA nfa);
+DSTATE nfa2dfa(NFA nfa);
 
 /*
  * Écrit dans le fichier fd les consignes pour dessiner l'automate avec dot.
  */
-void dfa2file(DSTATE dfa, char *name);
+void dfa2file(DSTATE dfa_head, char *name);
 
 #endif

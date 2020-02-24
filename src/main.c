@@ -39,28 +39,28 @@ int main(int argc, char **args) {
     system(dotstring);
 
     printf("Conversion en NFA ...\n");
-    NFA *nfa = tree2nfa(tree);
+    NFA nfa = tree2nfa(tree);
     sprintf(extname, "dot_src/%s.nfa", filename);
     printf("Création de %s_nfa.pdf ...\n", filename);
-    nfa2file(*nfa, extname);
+    nfa2file(nfa, extname);
     sprintf(dotstring, "dot -T pdf -o pdf/%s_nfa.pdf %s", filename, extname);
     system(dotstring);
 
     printf("Conversion en DFA ...\n");
-    DSTATE *dfa = nfa2dfa(*nfa);
+    DSTATE dfa_head = nfa2dfa(nfa);
     sprintf(extname, "dot_src/%s.dfa", filename);
     printf("Création de %s_dfa.pdf ...\n", filename);
-    dfa2file(*dfa, extname);
+    dfa2file(dfa_head, extname);
     sprintf(dotstring, "dot -T pdf -o pdf/%s_dfa.pdf %s", filename, extname);
     system(dotstring);
 
 /*
     printf("Minimisation du DFA ...\n");
-    DMINSTATE *dfamin = dfa2min(*nfa);
-    sprintf(extname, "dot_src/%s.dfa", filename);
-    printf("Création de %s_dfa.pdf ...\n", filename);
-    dfa2file(*dfa, extname);
-    sprintf(dotstring, "dot -T pdf -o pdf/%s_dfa.pdf %s", filename, extname);
+    DMINSTATE dfamin_head = dfa2min(dfa_head);
+    sprintf(extname, "dot_src/%s.min", filename);
+    printf("Création de %s_min.pdf ...\n", filename);
+    dfamin2file(dfamin_head, extname);
+    sprintf(dotstring, "dot -T pdf -o pdf/%s_min.pdf %s", filename, extname);
     system(dotstring);
 */}
 

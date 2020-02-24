@@ -33,7 +33,7 @@ typedef struct nfa {
 /*
  * Renvoie un NFA en partant de l'arbre syntaxique tree
  */
-NFA *tree2nfa(TREE tree);
+NFA tree2nfa(TREE tree);
 
 /*
  * Créée un fichier nommé `name` et y écrit les consignes pour dessiner

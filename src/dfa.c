@@ -88,7 +88,7 @@ LSTSTATES *transition(LSTSTATES *lst_s, char ch) {
     }
     return trans;
 }
-    
+
 
 /*
  * Créé en renvoie un nouvel état DFA correspondant à la liste d'états
@@ -123,12 +123,12 @@ int num_state(LSTSTATES *lst, DSTATE *dstate) {
         dstate = dstate->suiv;
     }
     return -1;
-} 
+}
 
 /*
  * Construit un DFA en partant du NFA nfa, et renvoie son état initial.
  */
-DSTATE *nfa2dfa(NFA nfa) {
+DSTATE nfa2dfa(NFA nfa) {
     int nb_states = 0;
     DSTATE *head = new_dfa_state(NULL, &nb_states); // état 0 : état puits
     LSTSTATES *lst_states = NULL;
@@ -165,25 +165,25 @@ DSTATE *nfa2dfa(NFA nfa) {
         }
         cur = cur->suiv;
     }
-    return head;
+    return *head;
 }
 
 /*
  * Créée un fichier name et y écrit les consignes pour dessiner
- * l'automate dfa avec dot.
+ * l'automate dont la tête est dfa_head avec dot.
  */
-void dfa2file(DSTATE dfa, char *name){
+void dfa2file(DSTATE dfa_head, char *name){
     FILE *fd = fopen(name, "w");
     if (fd == NULL) {
         fprintf(stderr, "Erreur à la création du %s.\n", name);
         perror("dfa2file");
         exit(EXIT_FAILURE);
-    }    
+    }
     fprintf(fd, "digraph T {\n");
     fprintf(fd, "node [shape=circle];\n");
     fprintf(fd, "\"\" [shape=none]\n");
-    DSTATE *cur = dfa.suiv; // On saute l'état puits
-    fprintf(fd, "\"\" -> %d\n", cur->num); // État initial 
+    DSTATE *cur = dfa_head.suiv; // On saute l'état puits
+    fprintf(fd, "\"\" -> %d\n", cur->num); // État initial
     while (cur != NULL) {
         if (cur->accept) fprintf(fd, "%d [shape=doublecircle];\n", cur->num);
         for (char ch=next_letter(0); ch != -1; ch=next_letter(ch)) {

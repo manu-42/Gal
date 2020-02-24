@@ -4,6 +4,8 @@
  * Construit un DFA minimal en partant du DFA dfa, et renvoie son état
  * initial.
  */
-DSTATE *dfa2min(DSTATE dfa) {
+DMINSTATE dfa2min(DSTATE dfa) {
+    DMINSTATE dfamin_head;
 
+    return dfamin_head;
 }
