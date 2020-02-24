@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "lecture.h"
 #include "arbre.h"
 #include "nfa.h"

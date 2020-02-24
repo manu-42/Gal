@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include "dfa.h"
 
-char tmp;
-
 /*
  * Ajoute l'état s à la liste ordonnée d'états lst_states.
  * renvoie 0 si l'état était déjà présent, 1 sinon

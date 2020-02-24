@@ -1,0 +1,113 @@
+\documentclass[algo]{cours}
+
+\title{\textbf{\textsc{Projet -- Générateur d'analyseur lexical}}}
+\newcommand{\classe}{DELAY Emmanuel}
+\author{}
+
+%\corrigetrue
+
+
+\begin{document}
+%1) un rappel du cahier des charges et un bilan rapide de ce qui a était fait par rapport à celui-ci ;
+
+\section{Le cahier des charges}
+
+L'objectif du projet était de réaliser générateur d'analyse lexicale (Gal). Pour cela, plusieurs étapes sont nécessaires, et ont été découpées dans plusieurs fichiers :
+\begin{enumerate}
+\item lire le fichier d'entrée :  \href{../src/lecture.h}{lecture.h} et  \href{../src/lecture.c}{lecture.c}
+\item construction de l'arbre de syntaxe abstraite :  \href{../src/arbre.h}{arbre.h} et  \href{../src/arbre.c}{arbre.c}
+\item construction de l'automate fini non déterministe :  \href{../src/nfa.h}{nfa.h} et  \href{../src/nfa.c}{nfa.c}
+\item construction de l'automate fini déterministe :  \href{../src/dfa.h}{dfa.h} et  \href{../src/dfa.c}{dfa.c}
+\item construction de l'automate fini déterministe minimal :  \href{../src/dfa_min.h}{dfa\_min.h} et  \href{../src/dfa_min.c}{dfa\_min.c} TODO
+\item génération du code source de l'analyseur lexicale TODO
+\end{enumerate}
+
+%2) une explication plus précise de ce qui a été fait, comment (quelles structures de données, quels algorithmes) ;
+\section{Lecture du fichier et alphabet}
+
+Le fichier \texttt{alphabet.c} contient les fonctions de gestion de l'alphabet. Le but de ces fonctions est de pouvoir assez facilement changer d'alphabet en cas de besoin.
+\begin{description}
+\item[\texttt{char next\_letter(char ch)} :] Renvoie la première lettre de l'alphabet si $\texttt{ch} = 0$, ou la lettre suivant \texttt{ch} dans l'alphabet s'il y en a une et $-1$ s'il n'y en a plus.
+\item[\texttt{int letter\_rank(char ch)} :] Renvoie le rang de la lettre \texttt{ch} dans l'alphabet, ou $-1$ si ce n'est pas une lettre de l'alphabet.
+\end{description}
+
+Le fichier \texttt{lecture.c} contient les fonctions de lecture et de traitement du fichier.
+\begin{description}
+\item[\texttt{void lecture(char *nom, char *exp)} :] Lit le fichier \texttt{nom} contenant une expression régulière, et stocke son contenu dans \texttt{exp}. Si le contenu du fichier ne finit pas par \texttt{$\backslash$n} ou qu'il contient un caractère non reconnu, affiche un message d'erreur et termine le programme.
+\item[\texttt{void add\_concat(char *src, char *dest)} :] Ajoute des points à la chaîne \texttt{src} aux endroits des concaténations (par exemple \texttt{ab} devient \texttt{a.b}), remplace les couples de parenthèses vides () par $\varepsilon$ (codé par \_) et stocke le résultat dans \texttt{dest}.
+\item[\texttt{char *get\_filename(char *fullpath)} :] Prend en paramètre le chemin complet vers un fichier, et renvoie le nom du fichier en enlevant le chemin et l'extension.
+\end{description}
+
+\section{Construction de l'arbre de syntaxe abstraite}
+
+\subsection{Notation polonaise inversée}
+
+Pour construire l'arbre de syntaxe abstraite, après avoir un peu reformaté la chaîne grâce à la fonction \texttt{add\_concat} décrite plus haut, j'ai choisi de passer par une écriture en notation polonaise inversée (NPI) en utilisant l'algorithme \ref{Shunting-yard} (fonction \texttt{to\_postfix}).
+
+\begin{algorithm}[h]
+\caption{Algorithme de passage en notation polonaise inversée (Shunting-yard)}
+\label{Shunting-yard}
+\Entree{Une chaîne de caractères \texttt{entry}}
+\Sortie{Une chaîne de caractères \texttt{postfix} correspondant à la notation polonaise inversée de l'entrée}
+\Trait{
+Créer une \texttt{pile} vide\;
+\texttt{npi} $\leftarrow []$ \;
+\PourCh{caractère \texttt{ch} de \texttt{entry}}{
+	\uSi{\texttt{ch} est une lettre}{ajouter \texttt{ch} à \texttt{postfix}}
+	\uSinonSi{\texttt{ch} est un parenthèse ouvrante}{empiler \texttt{ch}}
+	\uSinonSi{\texttt{ch} est une parenthèse fermante}{
+		\Tq{pile est non vide et que le sommet de la pile n'est pas une parenthèse ouvrante}{dépiler un caractère et l'ajouter à \texttt{postfix}}
+		\eSi{pile est vide}{quitter \tcp*[l]{Problème de parenthésage}}{dépiler la parenthèse ouvrante}
+		}
+	\Sinon{
+		\Tq{pile est non vide et que le sommet de la pile a une priorité supérieure à \texttt{ch}}{dépiler un caractère et l'ajouter à \texttt{postfix}}
+		empiler \texttt{ch}
+		}
+	}
+\Tq{pile est non vide}{
+	dépiler un caractère et l'ajouter à \texttt{postfix}\;
+	\Si{le caractère est une parenthèse ouvrante}{quitter \tcp*[l]{Problème de parenthésage}}
+	}
+}
+\end{algorithm}
+
+\subsection{Construction de l'arbre}
+
+Ensuite, on construit l'arbre à partir de cette expression par l'algorithme \ref{arbre} (fonction \texttt{to\_tree}). Pour cela, un arbre (TREE) est un pointeur vers un nœud (NODE), lui même composé d'un caractère \texttt{val} indiquant le contenu du nœud, et de deux pointeurs \texttt{left} vers \texttt{right} vers les éventuels fils gauche et droit. 
+
+\begin{algorithm}[h]
+\caption{Algorithme de création de l'arbre de syntaxe abstraite}
+\label{arbre}
+\Entrees{Une chaîne de caractères \texttt{src} en NPI}
+\Sortie{L'arbre \texttt{tree} correspondant}
+\Trait{
+\Si(\tcp*[h]{langage vide}){\texttt{src} est vide}{Renvoyer un arbre vide}
+Créer une pile vide\;
+\PourCh{caractère \texttt{ch} de \texttt{src}}{
+	Créer un nœud \texttt{nd} étiqueté par \texttt{ch}\;
+	\uSi{\texttt{ch} est une lettre}{\texttt{nd} est une feuille}
+	\uSinonSi(\tcp*[h]{opérateur unaire}){\texttt{ch} = '*'}{
+		dépiler le dernier arbre\;
+		le mettre en fils gauche de \texttt{nd}\;
+		}
+	\Sinon(\tcp*[h]{opérateur binaire}){
+		dépiler les deux derniers arbres\;
+		le mettre comme fils gauche et droit de \texttt{nd}\;
+		}
+	empiler \texttt{nd}\;
+	}
+dépiler dans \texttt{tree}\;
+\Si{la pile n'est pas vide}{quitter \tcp*[l]{Expression mal construite}}
+}
+\end{algorithm}
+
+Pour ces deux étapes, on utilise une pile (implémentée dans \texttt{pile.c}) soit comme pile de caractères (avec les fonctions \texttt{push\_char}, \texttt{pop\_char} et \texttt{sommet\_char} implémentée dans \texttt{pile.c}), soit comme pile d'arbres (avec \texttt{push\_tree}, \texttt{pop\_tree} et \texttt{sommet\_tree} de \texttt{arbre.c}).
+
+\section{Construction de l'automate fini non déterministe (NFA)}
+
+%3) une explication de comment vous savez que ce que vous avez fait fonctionne correctement (quels tests, développer votre réflexion qui a abouti au jeu de tests choisi) ;
+%4) un exposé des difficultés rencontrées et des moyens mis en œuvre pour y répondre.
+
+
+\end{document}
+

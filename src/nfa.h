@@ -2,7 +2,6 @@
 #define NFA_H
 
 #include "arbre.h"
-#include "pile.h"
 
 enum {SPLIT, ACCEPT};
 

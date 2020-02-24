@@ -2,10 +2,13 @@
 #include <stdlib.h>
 #include <fcntl.h> /* open */
 #include <unistd.h>
+#include <string.h>
+#include "alphabet.h"
 #include "lecture.h"
 
 /*
- * Renvoie le nom d'un fichier en enlevant le chemin et l'extension.
+ * Prend en paramètre le chemin complet vers un fichier, et renvoie le
+ * nom du fichier en enlevant le chemin et l'extension.
  */
 char *get_filename(char *fullpath) {
     int istart=0, iend=strlen(fullpath)-1;
@@ -31,15 +34,18 @@ char *get_filename(char *fullpath) {
 }
 
 /*
- * Indique si le caractère ch est acceptable.
+ * Indique si le caractère `ch` est acceptable.
  */
 unsigned char is_accepted(char ch) {
     return letter_rank(ch)!=-1 || ch=='|' || ch=='*' || ch=='(' || ch==')';
 }
 
 /*
- * Lit le fichier nom contenant une expression régulière
- * et la stocke dans exp.
+ * Lit le fichier \texttt{nom} contenant une expression régulière,
+ * et stocke son contenu dans \texttt{exp}.
+ * Si le contenu du fichier ne finit pas par \texttt{$\backslash$n}
+ * ou qu'il contient un caractère non reconnu, affiche un message
+ * d'erreur et termine le programme.
  */
 void lecture(char *nom, char *exp) {
     int fd = open(nom, O_RDONLY);
@@ -63,9 +69,9 @@ void lecture(char *nom, char *exp) {
 }
 
 /*
- * ajoute des points à la chaine source aux endroits des concaténations
- * (par exemple : ab devient a.b), remplace les pairs () par le mot vide
- * et stocke le résultat dans dest.
+ * Ajoute des points à la chaîne `src` aux endroits des concaténations
+ * (par exemple ab devient a.b), remplace les couples de parenthèses
+ * vides () par EPSILON et stocke le résultat dans `dest`.
  */
 void add_concat(char *src, char *dest) {
     dest[0] = src[0];

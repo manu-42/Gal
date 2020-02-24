@@ -1,9 +1,6 @@
 #ifndef ARBRE_H
 #define ARBRE_H
 
-#include "alphabet.h"
-#include "pile.h"
-
 /*
  * un noeud de l'arbre.
  * ch désigne l'étiquette du noeud

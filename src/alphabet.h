@@ -6,8 +6,8 @@
 
 /*
  * Renvoie
- *     la première lettre de l'alphabet si ch = 0
- *     la lettre suivant ch dans l'alphabet s'il y en a une
+ *     la première lettre de l'alphabet si `ch` = 0
+ *     la lettre suivant `ch` dans l'alphabet s'il y en a une
  *     -1 s'il n'y en a plus.
  */
 char next_letter(char ch);

@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "alphabet.h"
+#include "pile.h"
 #include "arbre.h"
 
 /*
@@ -17,6 +19,16 @@ int priority(char op) {
     return -1;
 }
 
+
+/*
+ * En cas d'expression mal construite, affiche un message d'erreur et
+ * quitte.
+ */
+void erreur_exp(char* msg, char *src) {
+    fprintf(stderr, "Problème de %s : '%s'\n", msg, src);
+    exit(EXIT_FAILURE);
+}
+
 /*
  * Détermine l'écriture postfixe en fonction d'une entrée
  * en écriture infixe (algorithme de Shunting-yard).
@@ -32,12 +44,9 @@ void to_postfix(char *entry, char *postfix) {
             while (!isEmpty(p) && sommet_char(p) != '('){
                 postfix[i_pf++] = pop_char(&p);
             }
-            if (isEmpty(p)) {
-                fprintf(stderr, "Erreur de parenthèse");
-                exit(EXIT_FAILURE);
-            }
+            if (isEmpty(p)) erreur_exp("parenthèse", entry);
             else {
-                pop(&p);
+                pop(&p);  // dépiler '('
             }
         }
         else { // opérateur
@@ -48,10 +57,7 @@ void to_postfix(char *entry, char *postfix) {
         }
     }
     while (!isEmpty(p)) {
-        if (sommet_char(p) == '(') {
-            fprintf(stderr, "Erreur de parenthèse");
-            exit(EXIT_FAILURE);
-        }
+        if (sommet_char(p) == '(') erreur_exp("parenthèse", entry);
         postfix[i_pf++] = pop_char(&p);
     }
     postfix[i_pf] = '\0';
@@ -84,7 +90,7 @@ TREE sommet_tree(PILE p) {
 }
 
 /*
- * affiche l'arbe en infixe.
+ * affiche l'arbe en notation infixe.
  */
 void print_infixe(TREE tree) {
     if (tree == NULL) return;
@@ -141,26 +147,26 @@ void to_tree(char *src, TREE *tree) {
     PILE p = create_PILE();
     for (int i=0; src[i] != '\0'; i++) {
         char ch = src[i];
-        TREE tr = malloc(sizeof(NODE));
-        tr->val = ch;
+        NODE *nd = malloc(sizeof(NODE));
+        nd->val = ch;
         if (letter_rank(ch)!=-1 || ch==EPSILON) { // feuille
-            tr->left = NULL;
-            tr->right = NULL;
+            nd->left = NULL;
+            nd->right = NULL;
         }
         else if (ch == '*') { // opérateur unaire
-            tr->left = pop_tree(&p);
-            tr->right = NULL;
+            if (isEmpty(p)) erreur_exp("syntaxe", src);
+            nd->left = pop_tree(&p);
+            nd->right = NULL;
         }
         else { // opérateur binaire
-            tr->right = pop_tree(&p);
-            tr->left = pop_tree(&p);
+            if (isEmpty(p)) erreur_exp("syntaxe", src);
+            nd->right = pop_tree(&p);
+            if (isEmpty(p)) erreur_exp("syntaxe", src);
+            nd->left = pop_tree(&p);
         }
-        push_tree(&p, tr);      
+        push_tree(&p, nd);      
     }
     *tree = pop_tree(&p);
-    if (!isEmpty(p)) {
-        fprintf(stderr, "Expression mal construite :\n %s", src);
-        exit(EXIT_FAILURE);
-    }
+    if (!isEmpty(p)) erreur_exp("syntaxe", src);
 }
 

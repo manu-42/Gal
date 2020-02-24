@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "alphabet.h"
 #include "nfa.h"
 
 #define NOT_VISITED -1

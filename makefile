@@ -1,7 +1,7 @@
 CFLAGS=-W -Wall -pedantic
 
 all: main
-main: bin/alphabet.o bin/lecture.o bin/pile.o bin/arbre.o bin/nfa.o bin/dfa.o src/main.c
+main: bin/alphabet.o bin/lecture.o bin/pile.o bin/arbre.o bin/nfa.o bin/dfa.o bin/dfa_min.o src/main.c
 	gcc -o bin/main $^
 bin/%.o: src/%.c src/%.h
 	gcc -o $@ -c $< $(CFLAGS)
