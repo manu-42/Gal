@@ -187,7 +187,7 @@ La fonction \texttt{new\_dfa\_state} permet de construire et renvoyer un tel ét
 
 \subsection{Création du DFA}
 
-Pour appliquer l'algorithme du cours, j'ai commencé par écrire une procédure récursive \texttt{eps\_cloture\_single} déterminant l'$\varepsilon$-clôture d'un état \texttt{s} en l'ajoutant à une liste ordonnée d'états \texttt{cloture}. Le principe est d'essayer d'ajouter \texttt{s} à \texttt{cloture} et, s'il n'est pas déjà présent, à ajouter récursivement ses successeurs atteignables par $\varepsilon$-transition.
+Pour appliquer l'algorithme du cours, on a besoin de déterminer l'$\varepsilon$-clôture d'un état \texttt{s}. Pour cela, j'ai commencé par écrire une procédure récursive \texttt{eps\_cloture\_single} qui prend en paramètres un état s et une liste ordonnée d'états \texttt{cloture}. Le principe est d'essayer d'ajouter \texttt{s} à \texttt{cloture} et, s'il n'est pas déjà présent, à ajouter récursivement ses successeurs atteignables par $\varepsilon$-transition.
 
 J'ai pu alors écrire une fonction \texttt{eps\_cloture} prenant en paramètre une liste d'états et déterminant la réunion des $\varepsilon$-clôture de ses états en appelant \texttt{eps\_cloture\_single} pour chacun d'eux.
 
@@ -201,7 +201,7 @@ L'application de l'algorithme du cours se fait alors presque mot à mot, en util
 \subsection{Représentation graphique}
 \label{dfa_graph}
 
-Ici, la représentation graphique ne pose pas réellement de problème. Il suffit de parcourir la liste des états, et pour chacun le tableau de transitions. La seule précaution pour avoir un graphique lisible est de sauter toutes les transitions qui pointent vers l'état puits. Ça permet de ne pas faire apparaître les transitions étiquetées par des lettres qui ne sont pas concrètement utilisées dans l'expression régulière fournie en entrée. Le fait que l'état puits soit toujours l'état de numéro 0 simplifie cette étape.
+Ici, la représentation graphique ne pose pas réellement de problème. Il suffit de parcourir la liste des états, et pour chacun le tableau de transitions. La seule précaution pour avoir un graphique lisible est de sauter l'état puits ainsi que toutes les transitions qui pointent vers lui. Ça permet de ne pas faire apparaître les transitions étiquetées pas des lettres qui ne sont pas concrètement utilisées dans l'expression régulière fournie en entrée. Le fait que l'état puits soit toujours l'état de numéro 0 simplifie cette étape.
 
 \section{Minimisation du DFA}
 

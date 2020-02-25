@@ -4,27 +4,18 @@
 #include "dfa.h"
 
 /*
- * état d'un automate DFA minimal
- * num est le numéro de l'état
- * trans est un tableau de pointeurs vers les états DFA accessibles
- *     depuis l'état courant
- * grp_trans est un tableau de pointeurs vers les groupes d'états DFA
- *     accessibles depuis l'état courant ?????
- * accept indique si l'état est acceptant ou non
- * suiv est un pointeur sur l'état suivant à traiter ???? possible d'éliminer ???
+ * un dfa minimal est codé par
+ *    son nombre d'états
+ *    sa table de transitions
  */
-typedef struct dminstate {
-    int num;
-    int trans[ALPHABET_LEN];
-    int grp_trans[ALPHABET_LEN];
-    unsigned char accept;
-    struct dminstate *suiv;
-} DMINSTATE;
+typedef struct {
+    int nb_states;
+    int **trans;
+}DFAMIN;
 
 /*
- * Construit un DFA minimal en partant du DFA dfa, et renvoie son état
- * initial.
+ * Construit et renvoie un DFA minimal en partant du DFA dfa.
  */
-DMINSTATE dfa2min(DSTATE dfa);
+DFAMIN dfa2min(DFA dfa);
 
 #endif

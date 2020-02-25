@@ -131,12 +131,15 @@ int num_state(LSTSTATES *lst, DSTATE *dstate) {
 DFA nfa2dfa(NFA nfa) {
     DFA dfa;
     int nb_states = 0;
-    DSTATE *puits = new_dfa_state(NULL, &nb_states); // état 0 : état puits
+    dfa.puits = new_dfa_state(NULL, &nb_states); // état 0 : état puits
+    for (int i_char=0; i_char<ALPHABET_LEN; i_char++) {
+        (dfa.puits)->trans[i_char] = 0;
+    }
     LSTSTATES *lst_states = NULL;
     eps_cloture_single(nfa.start, &lst_states);
-    dfa.head = new_dfa_state(lst_states, &nb_states);
-    puits->suiv = dfa.head;
-    DSTATE *cur = dfa.head, *tail = dfa.head;
+    DSTATE *cur = new_dfa_state(lst_states, &nb_states);
+    (dfa.puits)->suiv = cur;
+    DSTATE *tail = cur;
     while (cur != NULL) {
         /***
         printf("traitement de l'état %d (", cur->num);
@@ -149,7 +152,7 @@ DFA nfa2dfa(NFA nfa) {
             int i_char = letter_rank(ch);
             LSTSTATES *lst = transition(cur->lst_states, ch);
             lst = eps_cloture(lst);
-            int num = num_state(lst, puits);
+            int num = num_state(lst, dfa.puits);
             if (num == -1) {
                 num = nb_states;
                 /***
@@ -184,7 +187,7 @@ void dfa2file(DFA dfa, char *name){
     fprintf(fd, "digraph T {\n");
     fprintf(fd, "node [shape=circle];\n");
     fprintf(fd, "\"\" [shape=none]\n");
-    DSTATE *cur = dfa.head;
+    DSTATE *cur = (dfa.puits)->suiv; // on saute le puits
     fprintf(fd, "\"\" -> %d\n", cur->num); // État initial
     while (cur != NULL) {
         if (cur->accept) fprintf(fd, "%d [shape=doublecircle];\n", cur->num);

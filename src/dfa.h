@@ -31,11 +31,11 @@ typedef struct dstate {
 
 /*
  * un dfa est codé par
- *    son état initial head
+ *    son premier état, un puits
  *    son nombre d'états nb_states
  */
 typedef struct {
-    DSTATE *head;
+    DSTATE *puits;
     int nb_states;
 }DFA;
 

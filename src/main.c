@@ -5,6 +5,7 @@
 #include "arbre.h"
 #include "nfa.h"
 #include "dfa.h"
+#include "dfa_min.h"
 
 void usage(char *nom) {
     fprintf(stderr, "Usage : %s exp\n", nom);
@@ -54,9 +55,9 @@ int main(int argc, char **args) {
     sprintf(dotstring, "dot -T pdf -o pdf/%s_dfa.pdf %s", filename, extname);
     system(dotstring);
 
-/*
     printf("Minimisation du DFA ...\n");
-    DMINSTATE dfamin_head = dfa2min(dfa_head);
+    DFAMIN dfamin = dfa2min(dfa);
+/*
     sprintf(extname, "dot_src/%s.min", filename);
     printf("Création de %s_min.pdf ...\n", filename);
     dfamin2file(dfamin_head, extname);
