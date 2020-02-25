@@ -43,7 +43,7 @@ void print_grp(GROUPE *g) {
     printf(")\n");
     printf("Transitions vers les groupes");
     if (g->trans != NULL)
-        for (int i=0; i<ALPHABET_LEN; i++) printf("%d ", (g->trans)[i]);
+        for (int i=0; i<ALPHABET_LEN; i++) printf(" %d", (g->trans)[i]);
     printf("\n");
 }
 
@@ -148,7 +148,7 @@ DFAMIN dfa2min(DFA dfa) {
         pi[s->num] = i_grp;
         add_state2grp(s->num, lst_grp[i_grp], s->accept);
     }
-    // pi_new
+    // creation de pi_new
     int nb_grp_new;
     int *pi_new = malloc(sizeof(int) * NBSTATES);
     GROUPE **lst_grp_new = malloc(sizeof(GROUPE*) * NBSTATES);
@@ -161,6 +161,7 @@ DFAMIN dfa2min(DFA dfa) {
             GROUPE *g = lst_grp[i_grp];
 //            printf("Traitement du groupe ");
 //            print_grp(g);
+//            printf("--------------------\n");
             int nb_deb = nb_grp_new, nb_sous_grp = 0;
             for (int i_state=0; i_state<(g->nb_states); i_state++) {
                 int num_state = (g->lst_states)[i_state];
@@ -186,10 +187,10 @@ DFAMIN dfa2min(DFA dfa) {
             }
         }
         finished = (nb_grp_new == nb_grp);
-        nb_grp = nb_grp_new;
-        pi = pi_new;
         free_grp(lst_grp, nb_grp);
         free(lst_grp);
+        nb_grp = nb_grp_new;
+        pi = pi_new;
         lst_grp=lst_grp_new;
     }
     calc_dfamin(&dfamin, lst_grp, nb_grp);
