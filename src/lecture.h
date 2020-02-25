@@ -1,5 +1,5 @@
-#ifndef H_LECTURE
-#define H_LECTURE
+#ifndef LECTURE_H
+#define LECTURE_H
 
 /*
  * Taille maximale de l'expression.

@@ -39,6 +39,9 @@
 
 \tableofcontents
 
+\parindent=1em
+\parskip=2mm
+
 %1) un rappel du cahier des charges et un bilan rapide de ce qui a était fait par rapport à celui-ci ;
 
 \section{Le cahier des charges}
@@ -204,6 +207,66 @@ L'application de l'algorithme du cours se fait alors presque mot à mot, en util
 Ici, la représentation graphique ne pose pas réellement de problème. Il suffit de parcourir la liste des états, et pour chacun le tableau de transitions. La seule précaution pour avoir un graphique lisible est de sauter l'état puits ainsi que toutes les transitions qui pointent vers lui. Ça permet de ne pas faire apparaître les transitions étiquetées pas des lettres qui ne sont pas concrètement utilisées dans l'expression régulière fournie en entrée. Le fait que l'état puits soit toujours l'état de numéro 0 simplifie cette étape.
 
 \section{Minimisation du DFA}
+
+\subsection{structures utilisées}
+
+Ici, encore une fois, la difficulté a été de trouver des structures adaptées à l'algorithme. Le problème était de coder correctement une partition et ses groupes pour pouvoir facilement avoir la liste des états d'un groupe, le groupe auquel appartient un état et la liste des transitions d'un groupe à l'autre.
+
+\subsubsection{la structure GROUPE}
+
+Cette structure a pour champs :
+\begin{description}
+\item[num :] le numéro du groupe.
+\item[nb\_states :] son nombre d'états (au maximum égal au nombre d'états du nfa initial).
+\item[lst\_states] : la liste de ses états.
+\item[trans :]un tableau de ALPHABET\_LEN entiers donnant les numéros des groupes vers lesquels il existe une transition depuis l'état courant. L'indice du tableau correspond au rang dans l'alphabet de la lettre étiquetant la transition.
+\item[accept :] indique si l'état est acceptant ou non.
+\end{description}
+
+La fonction \texttt{create\_grp} permet alors de créer un nouveau groupe en lui passant en paramètre son numéro et le nombre maximum d'états qu'il peut contenir. Ce nombre est toujours égal au nombre d'états de l'automate initial.
+
+La procédure \texttt{add\_state2grp} ajoute l'état \texttt{num\_state} à la liste d'états du groupe pointé par \texttt{g} et actualise le champs \texttt{accept} du groupe si l'état ajouté est acceptant.
+
+La procédure \texttt{print\_grp}, qui sert uniquement au débogage, permet d'afficher un groupe avec la liste de ses états et son tableau de transitions.
+
+\subsubsection{les partitions}
+
+Pour définir une partition, j'utilise :
+\begin{itemize}
+\item une liste \texttt{pi} d'entiers indiquant pour chaque état du dfa initial le numéro de son groupe;
+\item un entier \texttt{nb\_grp} donnant le nombre de groupes de la partition;
+\item une liste \texttt{lst\_grp} de pointeurs vers les groupes de la partition. 
+\end{itemize}
+
+\subsubsection{la structure DFAMIN}
+
+Pour simplifier la suite du travail, l'automate minimal est codé par:
+\begin{description}
+\item[nb\_states :] son nombre d'états
+\item[init\_state :] son état initial 
+\item[lst\_accept :] une liste indiquant pour chaque état s'il est acceptant ou non
+\item[trans :] sa table de transitions
+
+\end{description}
+
+\subsection{les fonctions utiles}
+
+\begin{description}
+\item[calc\_grp\_trans :] renvoie le tableau des numéros de groupe accessibles par des transitions partant de l'état \texttt{num\_state} donné en paramètre. Cette fonction a besoin du tableau de transitions de dfa initial, ainsi que de la liste \texttt{pi} associant à chaque état son numéro de groupe.
+\item[comp\_trans :] compare deux listes listes de transitions.
+\item[num\_grp :] Renvoie le numéro d'un groupe correspondant au tableau de tansition \texttt{trans}. Si aucun ne correspond, renvoie $-1$. A besoin du numéro \texttt{start\_grp} du premier groupe à tester, du nombre \texttt{nb} de groupes à tester et de la liste \texttt{lst\_grp} de groupes.
+\item[free\_grp :] libère les pointeurs de la liste de groupes \texttt{lst\_grp} de longueur \texttt{len} pour pouvoir libérer le pointeur lui-même.
+\item[calc\_dfamin :] Détermine les champs de l'automate minimal correspondant à la liste de groupes finale.
+\item[init\_trans :] Renvoie le tableau de transitions associé au dfa initial.
+\end{description}
+
+\subsection{Création du DFA minimal et représentation graphique}
+
+Les structures et fonctions décrites plus haut permettent d'appliquer l'algorithme du cours sans réelle modification, et de construire sa représentation graphique sans difficulté supplémentaire. Les remarques faites sur l'état puits dans le \ref{dfa_graph} restent valables.
+
+
+
+
 
 
 

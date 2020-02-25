@@ -1,5 +1,5 @@
-#ifndef ISLETTER_H
-#define ISLETTER_H
+#ifndef ALPHABET_H
+#define ALPHABET_H
 
 #define EPSILON '_'  // Le mot vide
 #define ALPHABET_LEN 62  // Nombre de lettres de l'alphabet

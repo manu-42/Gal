@@ -1,12 +1,12 @@
-#ifndef H_DFA_MIN
-#define H_DFA_MIN
+#ifndef DFA_MIN_H
+#define DFA_MIN_H
 
 #include "dfa.h"
 
 /*
  * un dfa minimal est codé par
  *    son nombre d'états
- *    son état initial 
+ *    son état initial
  *    une liste indiquant pour chaque état s'il est acceptant ou non
  *    sa table de transitions
  */

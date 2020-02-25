@@ -6,6 +6,7 @@
 #include "nfa.h"
 #include "dfa.h"
 #include "dfa_min.h"
+#include "gal.h"
 
 void usage(char *nom) {
     fprintf(stderr, "Usage : %s exp\n", nom);
@@ -62,6 +63,8 @@ int main(int argc, char **args) {
     dfamin2file(dfamin, extname);
     sprintf(dotstring, "dot -T pdf -o pdf/%s_min.pdf %s", filename, extname);
     system(dotstring);
+
+    gal(dfamin);
 }
 
 
