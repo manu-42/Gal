@@ -57,12 +57,11 @@ int main(int argc, char **args) {
 
     printf("Minimisation du DFA ...\n");
     DFAMIN dfamin = dfa2min(dfa);
-/*
     sprintf(extname, "dot_src/%s.min", filename);
     printf("Création de %s_min.pdf ...\n", filename);
-    dfamin2file(dfamin_head, extname);
+    dfamin2file(dfamin, extname);
     sprintf(dotstring, "dot -T pdf -o pdf/%s_min.pdf %s", filename, extname);
     system(dotstring);
-*/}
+}
 
 
