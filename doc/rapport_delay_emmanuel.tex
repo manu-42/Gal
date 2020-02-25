@@ -195,13 +195,13 @@ De même, la fonction \texttt{transition} parcours l'ensemble des états de LSTS
 
 Enfin, une autre fonction utile pour appliquer l'algorithme du cours est la fonction \texttt{num\_state} qui parcours l'ensemble des états DFA créés jusqu'à maintenant, et renvoie le numéro de l'état DFA correspondant à la LSTSTATES \texttt{lst} passée en paramètre, ou $-1$ si aucun état ne correspond. 
 
-L'application de l'algorithme du cours se fait alors presque mot à mot, en utilisant les fonctions définies dans \texttt{alphabet.h} pour parcourir l'ensemble des lettres de l'alphabet. La seule différence est que j'initialise la liste d'états du DFA par un état puits au lieu de l'$\varepsilon$-transition de l'état initial du NFA. L'intérêt de cet état sera décrit en \ref{dfa_graph}.
+L'application de l'algorithme du cours se fait alors presque mot à mot, en utilisant les fonctions définies dans \texttt{alphabet.h} pour parcourir l'ensemble des lettres de l'alphabet. La seule différence est que je commence par créer un état \texttt{puits} dont le successeur est l'état initial du DFA, c'est à dire l'$\varepsilon$-transition de l'état initial du NFA. L'intérêt de cet état sera décrit en \ref{dfa_graph}.
 
 
 \subsection{Représentation graphique}
 \label{dfa_graph}
 
-Ici, la représentation graphique ne pose pas réellement de problème. Il suffit de parcourir la liste des états, et pour chacun le tableau de transitions. La seule précaution pour avoir un graphique lisible est de sauter l'état puits ainsi que toutes les transitions qui pointent vers lui. Ça permet de ne pas faire apparaître les transitions étiquetées pas des lettres qui ne sont pas concrètement utilisées dans l'expression régulière fournie en entrée. Le fait que l'état puits soit toujours l'état de numéro 0 simplifie cette étape.
+Ici, la représentation graphique ne pose pas réellement de problème. Il suffit de parcourir la liste des états, et pour chacun le tableau de transitions. La seule précaution pour avoir un graphique lisible est de sauter toutes les transitions qui pointent vers l'état puits. Ça permet de ne pas faire apparaître les transitions étiquetées par des lettres qui ne sont pas concrètement utilisées dans l'expression régulière fournie en entrée. Le fait que l'état puits soit toujours l'état de numéro 0 simplifie cette étape.
 
 \section{Minimisation du DFA}
 

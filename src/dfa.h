@@ -13,8 +13,8 @@ typedef struct lststates {
 }LSTSTATES;
 
 /*
- * état d'un automate DFA
- * lst_states est la liste ordonnée des états NFA
+ * état d'un DFA
+ * lst_states est la liste ordonnée des états du NFA
  * num est le numéro de l'état
  * trans est un tableau de pointeurs vers les états DFA accessibles
  *     depuis l'état courant
@@ -30,13 +30,24 @@ typedef struct dstate {
 } DSTATE;
 
 /*
- * Construit un DFA en partant du NFA nfa, et renvoie son état initial.
+ * un dfa est codé par
+ *    son état initial head
+ *    son nombre d'états nb_states
  */
-DSTATE nfa2dfa(NFA nfa);
+typedef struct {
+    DSTATE *head;
+    int nb_states;
+}DFA;
 
 /*
- * Écrit dans le fichier fd les consignes pour dessiner l'automate avec dot.
+ * Construit et renvoie un DFA en partant du NFA nfa.
  */
-void dfa2file(DSTATE dfa_head, char *name);
+DFA nfa2dfa(NFA nfa);
+
+/*
+ * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
+ * le dfa avec dot.
+ */
+void dfa2file(DFA dfa, char *name);
 
 #endif

@@ -126,16 +126,17 @@ int num_state(LSTSTATES *lst, DSTATE *dstate) {
 }
 
 /*
- * Construit un DFA en partant du NFA nfa, et renvoie son état initial.
+ * Construit et renvoie un DFA en partant du NFA nfa.
  */
-DSTATE nfa2dfa(NFA nfa) {
+DFA nfa2dfa(NFA nfa) {
+    DFA dfa;
     int nb_states = 0;
-    DSTATE *head = new_dfa_state(NULL, &nb_states); // état 0 : état puits
+    DSTATE *puits = new_dfa_state(NULL, &nb_states); // état 0 : état puits
     LSTSTATES *lst_states = NULL;
     eps_cloture_single(nfa.start, &lst_states);
-    DSTATE *cur = new_dfa_state(lst_states, &nb_states);
-    head->suiv = cur;
-    DSTATE *tail = cur;
+    dfa.head = new_dfa_state(lst_states, &nb_states);
+    puits->suiv = dfa.head;
+    DSTATE *cur = dfa.head, *tail = dfa.head;
     while (cur != NULL) {
         /***
         printf("traitement de l'état %d (", cur->num);
@@ -148,7 +149,7 @@ DSTATE nfa2dfa(NFA nfa) {
             int i_char = letter_rank(ch);
             LSTSTATES *lst = transition(cur->lst_states, ch);
             lst = eps_cloture(lst);
-            int num = num_state(lst, head);
+            int num = num_state(lst, puits);
             if (num == -1) {
                 num = nb_states;
                 /***
@@ -165,14 +166,15 @@ DSTATE nfa2dfa(NFA nfa) {
         }
         cur = cur->suiv;
     }
-    return *head;
+    dfa.nb_states = nb_states;
+    return dfa;
 }
 
 /*
- * Créée un fichier name et y écrit les consignes pour dessiner
- * l'automate dont la tête est dfa_head avec dot.
+ * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
+ * le dfa avec dot.
  */
-void dfa2file(DSTATE dfa_head, char *name){
+void dfa2file(DFA dfa, char *name){
     FILE *fd = fopen(name, "w");
     if (fd == NULL) {
         fprintf(stderr, "Erreur à la création du %s.\n", name);
@@ -182,12 +184,13 @@ void dfa2file(DSTATE dfa_head, char *name){
     fprintf(fd, "digraph T {\n");
     fprintf(fd, "node [shape=circle];\n");
     fprintf(fd, "\"\" [shape=none]\n");
-    DSTATE *cur = dfa_head.suiv; // On saute l'état puits
+    DSTATE *cur = dfa.head;
     fprintf(fd, "\"\" -> %d\n", cur->num); // État initial
     while (cur != NULL) {
         if (cur->accept) fprintf(fd, "%d [shape=doublecircle];\n", cur->num);
         for (char ch=next_letter(0); ch != -1; ch=next_letter(ch)) {
             int i_char = letter_rank(ch);
+            // on n'affiche pas les transitions vers l'état puits
             if ((cur->trans)[i_char] != 0) {
                 fprintf(fd, "%d -> %d [label=%c]\n",
                         cur->num, (cur->trans)[i_char], ch);

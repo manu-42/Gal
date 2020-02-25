@@ -105,7 +105,7 @@ void state2file(FILE *fd, STATE *s, int *num_state) {
 
 /*
  * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
- * l'automate nfa avec dot.
+ * le nfa avec dot.
  */
 void nfa2file(NFA nfa, char *name) {
     FILE *fd = fopen(name, "w");

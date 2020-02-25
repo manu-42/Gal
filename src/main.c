@@ -47,10 +47,10 @@ int main(int argc, char **args) {
     system(dotstring);
 
     printf("Conversion en DFA ...\n");
-    DSTATE dfa_head = nfa2dfa(nfa);
+    DFA dfa = nfa2dfa(nfa);
     sprintf(extname, "dot_src/%s.dfa", filename);
     printf("Création de %s_dfa.pdf ...\n", filename);
-    dfa2file(dfa_head, extname);
+    dfa2file(dfa, extname);
     sprintf(dotstring, "dot -T pdf -o pdf/%s_dfa.pdf %s", filename, extname);
     system(dotstring);
 
