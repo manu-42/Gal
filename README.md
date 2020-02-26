@@ -6,3 +6,6 @@ expression rationnelle simple finissant par \\n.
 
 Génère des fichiers au format dot dans le réperoire `dot_src` et les pdf
 correspondants dans le répertoire `pdf`.
+
+Le code source de l'analyseur lexical lui-même est construit dans le
+réperoire `analyseur_src` et l'exécutable est compilé dans `analyseur_bin`

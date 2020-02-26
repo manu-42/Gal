@@ -64,7 +64,11 @@ int main(int argc, char **args) {
     sprintf(dotstring, "dot -T pdf -o pdf/%s_min.pdf %s", filename, extname);
     system(dotstring);
 
-    gal(dfamin);
+    sprintf(extname, "analyseur_src/%s.c", filename);
+    gal(dfamin, extname, exp);
+    printf("Lancez 'gcc -o analyseur_bin/%s %s' pour compiler\n", filename, extname);
+
+    return EXIT_SUCCESS;
 }
 
 

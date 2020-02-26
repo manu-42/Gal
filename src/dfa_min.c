@@ -39,7 +39,7 @@ GROUPE *create_grp(int num, int nb_states) {
  */
 void add_state2grp(int num_state, GROUPE *g, unsigned char accept) {
     g->lst_states[(g->nb_states)++] = num_state;
-    if (accept) g->accept = 1;
+    g->accept |= accept;
 }
 
 /*

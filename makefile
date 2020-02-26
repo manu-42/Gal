@@ -8,4 +8,4 @@ bin/%.o: src/%.c src/%.h
 clean:
 	rm -f bin/*.o
 mrproper: clean
-	rm -f bin/main dot_src/* pdf/*
+	rm -f bin/main dot_src/* pdf/* analyseur_*/*

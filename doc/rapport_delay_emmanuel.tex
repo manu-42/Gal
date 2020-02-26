@@ -42,7 +42,7 @@
 \parindent=1em
 \parskip=2mm
 
-%1) un rappel du cahier des charges et un bilan rapide de ce qui a était fait par rapport à celui-ci ;
+\pagebreak
 
 \section{Le cahier des charges}
 
@@ -52,8 +52,8 @@ L'objectif du projet était de réaliser générateur d'analyse lexicale (Gal). 
 \item construction de l'arbre de syntaxe abstraite :  \href{../src/arbre.h}{arbre.h} et  \href{../src/arbre.c}{arbre.c}.
 \item construction de l'automate fini non déterministe :  \href{../src/nfa.h}{nfa.h} et  \href{../src/nfa.c}{nfa.c}
 \item construction de l'automate fini déterministe :  \href{../src/dfa.h}{dfa.h} et  \href{../src/dfa.c}{dfa.c}
-\item construction de l'automate fini déterministe minimal :  \href{../src/dfa_min.h}{dfa\_min.h} et  \href{../src/dfa_min.c}{dfa\_min.c} TODO
-\item génération du code source de l'analyseur lexicale TODO
+\item construction de l'automate fini déterministe minimal :  \href{../src/dfa_min.h}{dfa\_min.h} et  \href{../src/dfa_min.c}{dfa\_min.c}
+\item génération du code source de l'analyseur lexicale : \href{../src/gal.h}{gal.h} et  \href{../src/gal.c}{gal.c}
 \end{enumerate}
 
 On demandait de plus des représentations graphiques, qui sont créées dans le répertoire \texttt{pdf} en reprenant le nom du fichier passé en paramètre en lui ajoutant un suffixe \texttt{\_tree} pour l'arbre de syntaxe abstraite, \texttt{\_nfa} pour l'automate non déterministe, \texttt{\_dfa} pour le déterministe et \texttt{\_min} pour le déterministe minimal.
@@ -264,9 +264,11 @@ Pour simplifier la suite du travail, l'automate minimal est codé par:
 
 Les structures et fonctions décrites plus haut permettent d'appliquer l'algorithme du cours sans réelle modification, et de construire sa représentation graphique sans difficulté supplémentaire. Les remarques faites sur l'état puits dans le \ref{dfa_graph} restent valables.
 
+\section{Génération du code source de l'analyseur lexicale}
 
+Cette étape ne pose plus de réel problème : la fonction \texttt{gal} écrit le code source de l'analyseur dans le répertoire \texttt{analyseur\_src}. Ce dernier reprend la fonction \texttt{letter\_rank} d'\texttt{alphabet.c}, puis crée la tableau de transition de l'automate minimal construit précédemment, ainsi que la liste indiquant les états acceptants. Un boucle sur les caractères du mot passé en paramètre permet alors de suivre les états de l'automate en utilisant le tableau de transition, pour finalement afficher le message acceptant ou refusant ce mot. 
 
-
+\section{Tests}
 
 
 
