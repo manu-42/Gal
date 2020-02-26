@@ -25,9 +25,9 @@ TREE npi_to_tree(char *src);
 
 /*
  * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
- * l'abre avec dot.
+ * l'arbre associé à l'expression `exp` avec dot.
  */
-void tree2file(TREE tree, char *name);
+void tree2file(TREE tree, char *name, char *exp);
 
 /*
  * affiche l'arbe en infixe.

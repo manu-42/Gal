@@ -119,9 +119,9 @@ int tree2file_rec(FILE *fd, TREE tree, int *num_node) {
 
 /*
  * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
- * l'abre avec dot.
+ * l'arbre associé à l'expression `exp` avec dot.
  */
-void tree2file(TREE tree, char *name) {
+void tree2file(TREE tree, char *name, char *exp) {
     FILE *fd = fopen(name, "w");
     if (fd == NULL) {
         fprintf(stderr, "Erreur à la création du %s.\n", name);
@@ -130,6 +130,8 @@ void tree2file(TREE tree, char *name) {
     }
     int num_node = 0;
     fprintf(fd, "graph T {\n");
+    fprintf(fd, "labelloc=\"t\";\n");
+    fprintf(fd, "label=\"%s\";\n", exp);
     fprintf(fd, "node [shape=circle];\n");
     tree2file_rec(fd, tree, &num_node);
     fprintf(fd, "}\n");

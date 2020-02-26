@@ -105,9 +105,9 @@ void state2file(FILE *fd, STATE *s, int *num_state) {
 
 /*
  * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
- * le nfa avec dot.
+ * le nfa associé à l'expression `exp` avec dot.
  */
-void nfa2file(NFA nfa, char *name) {
+void nfa2file(NFA nfa, char *name, char *exp) {
     FILE *fd = fopen(name, "w");
     if (fd == NULL) {
         fprintf(stderr, "Erreur à la création du %s.\n", name);
@@ -115,6 +115,9 @@ void nfa2file(NFA nfa, char *name) {
         exit(EXIT_FAILURE);
     }
     fprintf(fd, "digraph T {\n");
+    fprintf(fd, "rankdir=\"LR\";\n");
+    fprintf(fd, "labelloc=\"t\";\n");
+    fprintf(fd, "label=\"%s\";\n", exp);
     fprintf(fd, "node [shape=circle];\n");
     fprintf(fd, "\"\" [shape=none]\n");
     int num_state = 0;

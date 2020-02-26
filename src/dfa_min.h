@@ -24,7 +24,7 @@ DFAMIN dfa2min(DFA dfa);
 
 /*
  * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
- * le dfa minimal avec dot.
+ * le dfa minimal associé à l'expression `exp` avec dot.
  */
-void dfamin2file(DFAMIN dfa, char *name);
+void dfamin2file(DFAMIN dfa, char *name, char *exp);
 #endif

@@ -175,9 +175,9 @@ DFA nfa2dfa(NFA nfa) {
 
 /*
  * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
- * le dfa avec dot.
+ * le dfa associé à l'expression `exp` avec dot.
  */
-void dfa2file(DFA dfa, char *name){
+void dfa2file(DFA dfa, char *name, char *exp){
     FILE *fd = fopen(name, "w");
     if (fd == NULL) {
         fprintf(stderr, "Erreur à la création du %s.\n", name);
@@ -185,6 +185,9 @@ void dfa2file(DFA dfa, char *name){
         exit(EXIT_FAILURE);
     }
     fprintf(fd, "digraph T {\n");
+    fprintf(fd, "rankdir=\"LR\";\n");
+    fprintf(fd, "labelloc=\"t\";\n");
+    fprintf(fd, "label=\"%s\";\n", exp);
     fprintf(fd, "node [shape=circle];\n");
     fprintf(fd, "\"\" [shape=none]\n");
     DSTATE *cur = (dfa.puits)->suiv; // on saute le puits

@@ -35,7 +35,7 @@ int main(int argc, char **args) {
     char *extname = malloc(sizeof(char) * (strlen(filename)+50));
     sprintf(extname, "dot_src/%s.tree", filename);
     printf("Création de %s_tree.pdf ...\n", filename);
-    tree2file(tree, extname);
+    tree2file(tree, extname, exp);
     char *dotstring = malloc(sizeof(char) * (2*strlen(extname)+50));
     sprintf(dotstring, "dot -T pdf -o pdf/%s_tree.pdf %s", filename, extname);
     system(dotstring);
@@ -44,7 +44,7 @@ int main(int argc, char **args) {
     NFA nfa = tree2nfa(tree);
     sprintf(extname, "dot_src/%s.nfa", filename);
     printf("Création de %s_nfa.pdf ...\n", filename);
-    nfa2file(nfa, extname);
+    nfa2file(nfa, extname, exp);
     sprintf(dotstring, "dot -T pdf -o pdf/%s_nfa.pdf %s", filename, extname);
     system(dotstring);
 
@@ -52,7 +52,7 @@ int main(int argc, char **args) {
     DFA dfa = nfa2dfa(nfa);
     sprintf(extname, "dot_src/%s.dfa", filename);
     printf("Création de %s_dfa.pdf ...\n", filename);
-    dfa2file(dfa, extname);
+    dfa2file(dfa, extname, exp);
     sprintf(dotstring, "dot -T pdf -o pdf/%s_dfa.pdf %s", filename, extname);
     system(dotstring);
 
@@ -60,10 +60,11 @@ int main(int argc, char **args) {
     DFAMIN dfamin = dfa2min(dfa);
     sprintf(extname, "dot_src/%s.min", filename);
     printf("Création de %s_min.pdf ...\n", filename);
-    dfamin2file(dfamin, extname);
+    dfamin2file(dfamin, extname, exp);
     sprintf(dotstring, "dot -T pdf -o pdf/%s_min.pdf %s", filename, extname);
     system(dotstring);
 
+    printf("Génération de l'analyseur lexical ...\n");
     sprintf(extname, "analyseur_src/%s.c", filename);
     gal(dfamin, extname, exp);
     printf("Lancez 'gcc -o analyseur_bin/%s %s' pour compiler\n", filename, extname);

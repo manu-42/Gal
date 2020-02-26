@@ -37,8 +37,8 @@ NFA tree2nfa(TREE tree);
 
 /*
  * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
- * le nfa avec dot.
+ * le nfa associé à l'expression `exp` avec dot.
  */
-void nfa2file(NFA nfa, char *name);
+void nfa2file(NFA nfa, char *name, char *exp);
 
 #endif

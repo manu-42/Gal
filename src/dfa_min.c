@@ -175,12 +175,9 @@ DFAMIN dfa2min(DFA dfa) {
         int nb_grp_new = 0;
         int *pi_new = malloc(sizeof(int) * NBSTATES);
         GROUPE **lst_grp_new = malloc(sizeof(GROUPE*) * NBSTATES);
-        printf("\n\n************************\n");
         // pour chaque groupe g de pi
         for (int i_grp=0; i_grp<nb_grp; i_grp++) {
             GROUPE *g = lst_grp[i_grp];
-            printf("traitement du groupe");
-            print_grp(g);
             int nb_deb = nb_grp_new, nb_sous_grp = 0;
             // distinguer si possible les états de g
             for (int i_state=0; i_state<(g->nb_states); i_state++) {
@@ -200,8 +197,6 @@ DFAMIN dfa2min(DFA dfa) {
                 // ajout de l'état num_state à son groupe
                 add_state2grp(num_state, lst_grp_new[num], accept[num_state]);
                 pi_new[num_state] = num;
-                printf("état %d mis dans le groupe ", num_state);
-                print_grp(lst_grp_new[num]);
             }
         }
         finished = (nb_grp_new == nb_grp); // pi == pi_new ?
@@ -218,9 +213,9 @@ DFAMIN dfa2min(DFA dfa) {
 
 /*
  * Créée un fichier nommé `name` et y écrit les consignes pour dessiner
- * le dfa minimal avec dot.
+ * le dfa minimal associé à l'expression `exp` avec dot.
  */
-void dfamin2file(DFAMIN dfa, char *name) {
+void dfamin2file(DFAMIN dfa, char *name, char *exp) {
     FILE *fd = fopen(name, "w");
     if (fd == NULL) {
         fprintf(stderr, "Erreur à la création du %s.\n", name);
@@ -228,6 +223,9 @@ void dfamin2file(DFAMIN dfa, char *name) {
         exit(EXIT_FAILURE);
     }
     fprintf(fd, "digraph T {\n");
+    fprintf(fd, "rankdir=\"LR\";\n");
+    fprintf(fd, "labelloc=\"t\";\n");
+    fprintf(fd, "label=\"%s\";\n", exp);
     fprintf(fd, "node [shape=circle];\n");
     fprintf(fd, "\"\" [shape=none]\n");
     fprintf(fd, "\"\" -> %d\n", dfa.init_state); // État initial
