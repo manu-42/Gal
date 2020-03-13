@@ -266,19 +266,20 @@ Les structures et fonctions décrites plus haut permettent d'appliquer l'algorit
 
 \section{Génération du code source de l'analyseur lexicale}
 
-Cette étape ne pose plus de réel problème : la fonction \texttt{gal} écrit le code source de l'analyseur dans le répertoire \texttt{analyseur\_src}. Ce dernier reprend la fonction \texttt{letter\_rank} d'\texttt{alphabet.c}, puis crée la tableau de transition de l'automate minimal construit précédemment, ainsi que la liste indiquant les états acceptants. Un boucle sur les caractères du mot passé en paramètre permet alors de suivre les états de l'automate en utilisant le tableau de transition, pour finalement afficher le message acceptant ou refusant ce mot. 
+Cette étape ne pose plus de réel problème : la fonction \texttt{gal} écrit dans le répertoire \texttt{analyseur\_src} le code source de l'analyseur. Ce dernier reprend la fonction \texttt{letter\_rank} d'\texttt{alphabet.c}, puis crée la tableau de transition de l'automate minimal construit précédemment, ainsi que la liste indiquant les états acceptants. Un boucle sur les caractères du mot passé en paramètre permet alors de suivre les états de l'automate en utilisant le tableau de transition, pour finalement afficher le message acceptant ou refusant ce mot. 
 
 \section{Tests}
 
 Tous les tests que j'ai pratiqué semblent concluant. J'ai en particulier fait :
 \begin{itemize}
 \item des tests sur les erreurs dans l'expression régulière entrée, comme \og\texttt{b)(a}\fg, \og\texttt{a(|)b}\fg, \og\texttt{ab|}\fg ou \og\texttt{a|*b}\fg;
-\item des cas particuliers comme le langage vide \og \fg{} ou le langage du mot vide \og()\fg;
+\item des cas particuliers comme le langage vide \og \fg{} ou le langage du mot vide \og()\fg avec des variantes du type \og(())\fg ou \og()()\fg pour vérifier la gestion des parenthèses vides;
+\item des tests avec une expression régulière de plusieurs kilo octets (constituée uniquement de paires de parenthèses vides) pour vérifier les routines d'allocation dynamique de la mémoire;
 \item un exemple de chaque opérateur, comme \og\texttt{a*}\fg, \og\texttt{a|b}\fg, ou \og\texttt{ab}\fg
 \item quelques exemples d'enchaînements \og\texttt{a**}\fg, \og\texttt{(a|b)*}\fg, \texttt{(ab)*}, \og\texttt{ab|cd}\fg, \og\texttt{(ab)(cd)}\fg, \dots
 \item des tests avec des lettres en début ou fin d'alphabet, comme \og\texttt{azAZ09}\fg
 \item des tests avec l'exemple du cours \og \texttt{((a|b)*bab)} \fg{} ou celui de l'énoncé \og \texttt{(a|(bc))*(ba(ca|ba))} \fg{}, ainsi que les différents exemples corrigés dans le TD.
-\item des tests sur des exemples plus compliqués piochés sur le net, comme l'automate de De Bruijn associé à l'expression régulière \og \texttt{(a|b)$^*$a(a|b)$^n$} \fg{} dont a parlé Frédéric Muller sur le forum. Cet automate  reconnaît les mots dont la $n+1$-ième lettre en partant de la fin est un \texttt{a}. Il semble que l'automate minimal doit avoir $2^{n+1}$ états, ce qui se confirme sur les tests que j'ai fait (jusqu'à $n=6$ dont la construction du DFA, qui a lui 129 états, prends déjà pas loin de 2 minutes).
+\item des tests sur des exemples plus compliqués piochés sur le net, comme l'automate de De Bruijn associé à l'expression régulière \og \texttt{(a|b)$^*$a(a|b)$^n$} \fg{} dont a parlé Frédéric Muller sur le forum. Cet automate  reconnaît les mots dont la $n+1$-ième lettre en partant de la fin est un \texttt{a}. Il semble que l'automate minimal doit avoir $2^{n+1}$ états, ce qui se confirme sur les tests que j'ai fait (jusqu'à $n=6$ dont la construction de ma représentation graphique du DFA, qui a lui 129 états, prends déjà pas loin de 2 minutes). En enlevant les représentations graphiques avec dot, je suis monté jusqu'à $n=13$.
 
 \end{itemize}
 
