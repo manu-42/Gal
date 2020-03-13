@@ -108,7 +108,7 @@ void print_infixe(TREE tree) {
 /*
  * Fonction récursive pour écrire dans le fichier fd les consignes pour
  * dessiner l'arbre avec dot.
- * num_node permet de numéroter les neouds.
+ * num_node permet de numéroter les noeuds.
  */
 int tree2file_rec(FILE *fd, TREE tree, int *num_node) {
     if (tree == NULL) return -1;

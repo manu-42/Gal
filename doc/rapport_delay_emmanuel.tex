@@ -135,7 +135,7 @@ dépiler dans \texttt{tree}\;
 }
 \end{algorithm}
 
-Ensuite, on construit l'arbre à partir de cette expression par l'algorithme \ref{arbre} (procédure \texttt{to\_tree}). Pour cela, un arbre (TREE) est un pointeur vers un nœud (NODE), lui même composé d'un caractère \texttt{val} indiquant le contenu du nœud, et de deux pointeurs \texttt{left} et \texttt{right} vers les éventuels fils gauche et droit. 
+Ensuite, on construit l'arbre à partir de cette expression par l'algorithme \ref{arbre} (fonction \texttt{to\_tree}). Pour cela, un arbre (TREE) est un pointeur vers un nœud (NODE), lui même composé d'un caractère \texttt{val} indiquant le contenu du nœud, et de deux pointeurs \texttt{left} et \texttt{right} vers les éventuels fils gauche et droit. 
 
 Pour ces deux étapes, on utilise une pile (implémentée dans \texttt{pile.c}) soit comme pile de caractères (avec les fonctions \texttt{push\_char}, \texttt{pop\_char} et \texttt{sommet\_char} implémentées dans \texttt{pile.c}), soit comme pile d'arbres (avec \texttt{push\_tree}, \texttt{pop\_tree} et \texttt{sommet\_tree} de \texttt{arbre.c}).
 
@@ -160,6 +160,8 @@ En relisant ce dernier, j'ai fini par réagir que dans l'automate obtenu, chaque
 \subsection{Création du NFA}
 
 En implémentant un automate NFA comme une structure à deux champs : un pointeur \texttt{start} vers son état initial et un pointeur \texttt{end} vers son état final, on peut appliquer de façon complètement immédiate l'algorithme de McNaughton - Yamada - Thompson donné dans le cours. C'est ce que fait la fonction \texttt{tree2nfa}.
+
+Le seul cas particulier est celui du langage vide. L'algorithme doit construire un NFA qui possède exactement un état initial et un état final acceptant. Sachant que seul l'état acceptant peut ne pas avoir d'arc sortant, l'état initial doit donc avoir un arc sortant. Ainsi, pour le langage vide, la fonction renvoie un NFA composé d'un état initial qui boucle sur lui même par $\varepsilon$-transition et d'un état final isolé.
 
 \subsection{Représentation graphique}
 
@@ -198,7 +200,7 @@ De même, la fonction \texttt{transition} parcours l'ensemble des états de LSTS
 
 Enfin, une autre fonction utile pour appliquer l'algorithme du cours est la fonction \texttt{num\_state} qui parcours l'ensemble des états DFA créés jusqu'à maintenant, et renvoie le numéro de l'état DFA correspondant à la LSTSTATES \texttt{lst} passée en paramètre, ou $-1$ si aucun état ne correspond. 
 
-L'application de l'algorithme du cours se fait alors presque mot à mot, en utilisant les fonctions définies dans \texttt{alphabet.h} pour parcourir l'ensemble des lettres de l'alphabet. La seule différence est que je commence par créer un état \texttt{puits} dont le successeur est l'état initial du DFA, c'est à dire l'$\varepsilon$-transition de l'état initial du NFA. L'intérêt de cet état sera décrit en \ref{dfa_graph}. L'automate DFA est alors implémenté par une structure à deux champs : une liste chaînée d'états (commençant par l'état puits), et le nombre d'états.
+L'application de l'algorithme du cours se fait alors presque mot à mot, en utilisant les fonctions définies dans \texttt{alphabet.h} pour parcourir l'ensemble des lettres de l'alphabet. La seule différence est que je commence par créer un état \texttt{puits} dont le successeur est l'état initial du DFA, c'est à dire l'$\varepsilon$-cloture de l'état initial du NFA. L'intérêt de cet état sera décrit en \ref{dfa_graph}. L'automate DFA est alors implémenté par une structure à deux champs : une liste chaînée d'états (commençant par l'état puits), et le nombre d'états.
 
 
 \subsection{Représentation graphique}
@@ -279,7 +281,7 @@ Tous les tests que j'ai pratiqué semblent concluant. J'ai en particulier fait :
 \item quelques exemples d'enchaînements \og\texttt{a**}\fg, \og\texttt{(a|b)*}\fg, \texttt{(ab)*}, \og\texttt{ab|cd}\fg, \og\texttt{(ab)(cd)}\fg, \dots
 \item des tests avec des lettres en début ou fin d'alphabet, comme \og\texttt{azAZ09}\fg
 \item des tests avec l'exemple du cours \og \texttt{((a|b)*bab)} \fg{} ou celui de l'énoncé \og \texttt{(a|(bc))*(ba(ca|ba))} \fg{}, ainsi que les différents exemples corrigés dans le TD.
-\item des tests sur des exemples plus compliqués piochés sur le net, comme l'automate de De Bruijn associé à l'expression régulière \og \texttt{(a|b)$^*$a(a|b)$^n$} \fg{} dont a parlé Frédéric Muller sur le forum. Cet automate  reconnaît les mots dont la $n+1$-ième lettre en partant de la fin est un \texttt{a}. Il semble que l'automate minimal doit avoir $2^{n+1}$ états, ce qui se confirme sur les tests que j'ai fait (jusqu'à $n=6$ dont la construction de ma représentation graphique du DFA, qui a lui 128 états, prends déjà pas loin de 2 minutes). En enlevant les représentations graphiques avec \texttt{dot}, je suis monté jusqu'à $n=13$.
+\item des tests sur des exemples plus compliqués piochés sur le net, comme l'automate de De Bruijn associé à l'expression régulière \og \texttt{(a|b)$^*$a(a|b)$^n$} \fg{} dont a parlé Frédéric Muller sur le forum. Cet automate  reconnaît les mots dont la $n+1$-ième lettre en partant de la fin est un \texttt{a}. Il semble que l'automate minimal doit avoir $2^{n+1}$ états, ce qui se confirme sur les tests que j'ai fait (jusqu'à $n=6$ dont la construction de la représentation graphique des DFA à 128 états prends pas loin de 2 minutes). En enlevant les représentations graphiques avec \texttt{dot}, je suis monté jusqu'à $n=13$.
 \end{itemize}
 
 J'ai aussi réalisé un petit script bash \texttt{test.sh} qui fait tourner le programme sur tous les exemples se trouvant dans le répertoire \texttt{regexp} et qui compile l'analyseur lexical obtenu, ce qui permet d’accélérer les test, et permet de rapidement voir si la correction d'un bug n'a pas détruit ce qui marchait auparavant.
