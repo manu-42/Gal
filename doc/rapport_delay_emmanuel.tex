@@ -279,11 +279,12 @@ Tous les tests que j'ai pratiqué semblent concluant. J'ai en particulier fait :
 \item quelques exemples d'enchaînements \og\texttt{a**}\fg, \og\texttt{(a|b)*}\fg, \texttt{(ab)*}, \og\texttt{ab|cd}\fg, \og\texttt{(ab)(cd)}\fg, \dots
 \item des tests avec des lettres en début ou fin d'alphabet, comme \og\texttt{azAZ09}\fg
 \item des tests avec l'exemple du cours \og \texttt{((a|b)*bab)} \fg{} ou celui de l'énoncé \og \texttt{(a|(bc))*(ba(ca|ba))} \fg{}, ainsi que les différents exemples corrigés dans le TD.
-\item des tests sur des exemples plus compliqués piochés sur le net, comme l'automate de De Bruijn associé à l'expression régulière \og \texttt{(a|b)$^*$a(a|b)$^n$} \fg{} dont a parlé Frédéric Muller sur le forum. Cet automate  reconnaît les mots dont la $n+1$-ième lettre en partant de la fin est un \texttt{a}. Il semble que l'automate minimal doit avoir $2^{n+1}$ états, ce qui se confirme sur les tests que j'ai fait (jusqu'à $n=6$ dont la construction de ma représentation graphique du DFA, qui a lui 129 états, prends déjà pas loin de 2 minutes). En enlevant les représentations graphiques avec dot, je suis monté jusqu'à $n=13$.
-
+\item des tests sur des exemples plus compliqués piochés sur le net, comme l'automate de De Bruijn associé à l'expression régulière \og \texttt{(a|b)$^*$a(a|b)$^n$} \fg{} dont a parlé Frédéric Muller sur le forum. Cet automate  reconnaît les mots dont la $n+1$-ième lettre en partant de la fin est un \texttt{a}. Il semble que l'automate minimal doit avoir $2^{n+1}$ états, ce qui se confirme sur les tests que j'ai fait (jusqu'à $n=6$ dont la construction de ma représentation graphique du DFA, qui a lui 128 états, prends déjà pas loin de 2 minutes). En enlevant les représentations graphiques avec \texttt{dot}, je suis monté jusqu'à $n=13$.
 \end{itemize}
 
-J'ai aussi réalisé un petit script bash qui fait tourner le programme sur tous les exemples se trouvant dans le répertoire \texttt{regexp} et qui compile l'analyseur lexical obtenu, ce qui permet d’accélérer les test, et permet de rapidement voir si la correction d'un bug n'a pas détruit ce qui marchait auparavant.
+J'ai aussi réalisé un petit script bash \texttt{test.sh} qui fait tourner le programme sur tous les exemples se trouvant dans le répertoire \texttt{regexp} et qui compile l'analyseur lexical obtenu, ce qui permet d’accélérer les test, et permet de rapidement voir si la correction d'un bug n'a pas détruit ce qui marchait auparavant.
+
+Le répertoire \texttt{regexp\_gros} contient quelques exemples d'expression régulières pour lesquelles mon programme fonctionne à condition d'enlever la génération des représentations graphiques avec \texttt{dot} qui prend trop de temps. Pour cela, on peut lancer le programme avec l'option \texttt{-{}-nograph}.
 
 \end{document}
 
