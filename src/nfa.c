@@ -37,7 +37,7 @@ NFA tree2nfa(TREE tree) {
     if (tree == NULL) { // langage vide
         STATE *s = malloc(sizeof(STATE));
         s->num = NOT_VISITED;
-        s->ch = EPSILON;
+        s->ch = EPSILON;  // l'état initial boucle sur lui même
         s->suiv = s;
         s->suiv2 = NULL;
         return nfa(s, e);
