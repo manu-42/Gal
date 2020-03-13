@@ -53,9 +53,10 @@ char *lecture(char *nom) {
         perror("lecture");
         exit(EXIT_FAILURE);
     }
-    int c, size = 0, max_size = 2;
+    int c, size = 0, max_size = 32;
     char *exp = malloc(max_size * sizeof(char));
     while ((c = getc(fp)) != EOF) {
+        // réallocation de mémoire si besoin
         if (size >= max_size) {
             max_size *= 2;
             exp = realloc(exp, max_size);
@@ -72,6 +73,7 @@ char *lecture(char *nom) {
         }
     }
     fclose(fp);
+    // le fichier doit finir par '\n'
     if (size <= 0 || exp[size-1] != '\n') {
         fprintf(stderr, "Problème dans le fichier %s.\n", nom);
         exit(EXIT_FAILURE);
@@ -87,24 +89,27 @@ char *lecture(char *nom) {
  * vides () par EPSILON et renvoie le résultat.
  */
 char *add_concat(char *src) {
+    // La taille de destination est inférieure au double de la source
     char *dest = malloc(strlen(src)*2*sizeof(char));
     dest[0] = src[0];
     int i_dest = 1;
     for (int i=1; src[i] != '\0'; i++) {
         char ch = src[i];
+        // suppression des paires de parenthèses vides
         if (ch == ')' && src[i-1] == '(') {
             i_dest--;
             ch = EPSILON;
         }
-        if (    ( letter_rank(ch)!=-1 || ch==EPSILON || ch == '(')
-             && src[i-1] != '|'
-             && src[i-1] != '('
+        // ajout des . de concaténation entre une lettre ou '*' ou ')'
+        // et une lettre ou '('
+        if (    ( src[i-1] != '|' && src[i-1] != '(' )
+             && ( letter_rank(ch)!=-1 || ch==EPSILON || ch == '(' )
            ) {
             dest[i_dest++] = '.';
         }
         dest[i_dest++] = ch;
     }
-    dest[i_dest] = '\0';
-    dest = realloc(dest, i_dest+1);
+    dest[i_dest++] = '\0';
+    dest = realloc(dest, i_dest * sizeof(char));
     return dest;
 }

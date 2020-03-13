@@ -12,10 +12,10 @@ typedef struct node  {
 }NODE, *TREE;
 
 /*
- * Détermine l'écriture postfixe en fonction d'une entrée
+ * Renvoie l'écriture postfixe en fonction d'une entrée `entry`
  * en écriture infixe (algorithme de Shunting-yard).
  */
-void to_postfix(char *entry, char *postfix);
+char *to_postfix(char *entry);
 
 /*
  * Renvoie l'arbre syntaxique correspondant à une expression src en

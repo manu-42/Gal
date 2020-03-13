@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "alphabet.h"
 #include "pile.h"
 #include "arbre.h"
@@ -30,10 +31,11 @@ void erreur_exp(char* msg, char *src) {
 }
 
 /*
- * Détermine l'écriture postfixe en fonction d'une entrée
+ * Renvoie l'écriture postfixe en fonction d'une entrée `entry`
  * en écriture infixe (algorithme de Shunting-yard).
  */
-void to_postfix(char *entry, char *postfix) {
+char *to_postfix(char *entry) {
+    char *postfix = malloc(strlen(entry) * sizeof(char));
     PILE p = create_PILE();
     int i_pf = 0;
     for (int i=0; entry[i] != '\0'; i++) {
@@ -60,7 +62,9 @@ void to_postfix(char *entry, char *postfix) {
         if (sommet_char(p) == '(') erreur_exp("parenthèse", entry);
         postfix[i_pf++] = pop_char(&p);
     }
-    postfix[i_pf] = '\0';
+    postfix[i_pf++] = '\0';
+    postfix = realloc(postfix, i_pf * sizeof(char));
+    return postfix;
 }
 
 /*

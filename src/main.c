@@ -24,9 +24,7 @@ int main(int argc, char **args) {
     char *filename = get_filename(args[1]);
     char *exp2 = add_concat(exp);
     printf("après modif '%s'\n", exp2);
-    return 0;
-    char *postfix;
-    to_postfix(exp2, postfix);
+    char *postfix = to_postfix(exp2);
     printf("Postfix : '%s'\n", postfix);
 
     printf("Conversion en arbre ...\n");

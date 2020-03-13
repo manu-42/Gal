@@ -69,8 +69,8 @@ Le fichier \texttt{alphabet.c} contient les fonctions de gestion de l'alphabet. 
 
 Le fichier \texttt{lecture.c} contient les fonctions de lecture et de traitement du fichier.
 \begin{description}
-\item[\texttt{void lecture(char *nom, char *exp)} :] Lit le fichier \texttt{nom} contenant une expression régulière, et renvoie son contenu. Si le contenu du fichier ne finit pas par \texttt{$\backslash$n} ou qu'il contient un caractère non reconnu, affiche un message d'erreur et termine le programme.
-\item[\texttt{void add\_concat(char *src, char *dest)} :] Ajoute des points à la chaîne \texttt{src} aux endroits des concaténations (par exemple \texttt{ab} devient \texttt{a.b}), remplace les couples de parenthèses vides () par $\varepsilon$ (codé par \_) et stocke le résultat dans \texttt{dest}.
+\item[\texttt{char *lecture(char *nom)} :] Lit le fichier \texttt{nom} contenant une expression régulière, et renvoie son contenu. Si le contenu du fichier ne finit pas par \texttt{$\backslash$n} ou qu'il contient un caractère non reconnu, affiche un message d'erreur et termine le programme.
+\item[\texttt{char *add\_concat(char *src)} :] Ajoute des points à la chaîne \texttt{src} aux endroits des concaténations (par exemple \texttt{ab} devient \texttt{a.b}), remplace les couples de parenthèses vides () par $\varepsilon$ (codé par \_) et renvoie le résultat.
 \item[\texttt{char *get\_filename(char *fullpath)} :] Prend en paramètre le chemin complet vers un fichier, et renvoie le nom du fichier en enlevant le chemin et l'extension.
 \end{description}
 
@@ -105,7 +105,7 @@ Créer une \texttt{pile} vide\;
 }
 \end{algorithm}
 
-Pour construire l'arbre de syntaxe abstraite, après avoir un peu reformaté la chaîne grâce à la fonction \texttt{add\_concat} décrite plus haut, j'ai choisi de passer par une écriture en notation polonaise inversée (NPI) en utilisant l'algorithme \ref{Shunting-yard} (procédure \texttt{to\_postfix}).
+Pour construire l'arbre de syntaxe abstraite, après avoir un peu reformaté la chaîne grâce à la fonction \texttt{add\_concat} décrite plus haut, j'ai choisi de passer par une écriture en notation polonaise inversée (NPI) en utilisant l'algorithme \ref{Shunting-yard} (fonction \texttt{to\_postfix}).
 
 \subsection{Construction de l'arbre}
 
@@ -159,7 +159,7 @@ En relisant ce dernier, j'ai fini par réagir que dans l'automate obtenu, chaque
 
 \subsection{Création du NFA}
 
-En implémentant un automate DFA comme une structure à deux champs : un pointeur \texttt{start} vers son état initial et un pointeur \texttt{end} vers son état final, on peut appliquer de façon complètement immédiate l'algorithme de McNaughton - Yamada - Thompson donné dans le cours. C'est ce que fait la fonction \texttt{tree2nfa}.
+En implémentant un automate NFA comme une structure à deux champs : un pointeur \texttt{start} vers son état initial et un pointeur \texttt{end} vers son état final, on peut appliquer de façon complètement immédiate l'algorithme de McNaughton - Yamada - Thompson donné dans le cours. C'est ce que fait la fonction \texttt{tree2nfa}.
 
 \subsection{Représentation graphique}
 
@@ -198,7 +198,7 @@ De même, la fonction \texttt{transition} parcours l'ensemble des états de LSTS
 
 Enfin, une autre fonction utile pour appliquer l'algorithme du cours est la fonction \texttt{num\_state} qui parcours l'ensemble des états DFA créés jusqu'à maintenant, et renvoie le numéro de l'état DFA correspondant à la LSTSTATES \texttt{lst} passée en paramètre, ou $-1$ si aucun état ne correspond. 
 
-L'application de l'algorithme du cours se fait alors presque mot à mot, en utilisant les fonctions définies dans \texttt{alphabet.h} pour parcourir l'ensemble des lettres de l'alphabet. La seule différence est que je commence par créer un état \texttt{puits} dont le successeur est l'état initial du DFA, c'est à dire l'$\varepsilon$-transition de l'état initial du NFA. L'intérêt de cet état sera décrit en \ref{dfa_graph}.
+L'application de l'algorithme du cours se fait alors presque mot à mot, en utilisant les fonctions définies dans \texttt{alphabet.h} pour parcourir l'ensemble des lettres de l'alphabet. La seule différence est que je commence par créer un état \texttt{puits} dont le successeur est l'état initial du DFA, c'est à dire l'$\varepsilon$-transition de l'état initial du NFA. L'intérêt de cet état sera décrit en \ref{dfa_graph}. L'automate DFA est alors implémenté par une structure à deux champs : une liste chaînée d'états (commençant par l'état puits), et le nombre d'états.
 
 
 \subsection{Représentation graphique}
