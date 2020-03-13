@@ -19,14 +19,13 @@ int main(int argc, char **args) {
         usage(args[0]);
         exit(1);
     }
-    char exp[MAX_SIZE_EXP];
-    lecture(args[1], exp);
+    char *exp = lecture(args[1]);
     printf("expression lue '%s'\n", exp);
     char *filename = get_filename(args[1]);
-    char exp2[MAX_SIZE_EXP];
-    add_concat(exp, exp2);
+    char *exp2 = add_concat(exp);
     printf("après modif '%s'\n", exp2);
-    char postfix[MAX_SIZE_EXP];
+    return 0;
+    char *postfix;
     to_postfix(exp2, postfix);
     printf("Postfix : '%s'\n", postfix);
 

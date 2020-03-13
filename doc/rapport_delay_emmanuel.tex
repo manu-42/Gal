@@ -69,7 +69,7 @@ Le fichier \texttt{alphabet.c} contient les fonctions de gestion de l'alphabet. 
 
 Le fichier \texttt{lecture.c} contient les fonctions de lecture et de traitement du fichier.
 \begin{description}
-\item[\texttt{void lecture(char *nom, char *exp)} :] Lit le fichier \texttt{nom} contenant une expression régulière, et stocke son contenu dans \texttt{exp}. Si le contenu du fichier ne finit pas par \texttt{$\backslash$n} ou qu'il contient un caractère non reconnu, affiche un message d'erreur et termine le programme.
+\item[\texttt{void lecture(char *nom, char *exp)} :] Lit le fichier \texttt{nom} contenant une expression régulière, et renvoie son contenu. Si le contenu du fichier ne finit pas par \texttt{$\backslash$n} ou qu'il contient un caractère non reconnu, affiche un message d'erreur et termine le programme.
 \item[\texttt{void add\_concat(char *src, char *dest)} :] Ajoute des points à la chaîne \texttt{src} aux endroits des concaténations (par exemple \texttt{ab} devient \texttt{a.b}), remplace les couples de parenthèses vides () par $\varepsilon$ (codé par \_) et stocke le résultat dans \texttt{dest}.
 \item[\texttt{char *get\_filename(char *fullpath)} :] Prend en paramètre le chemin complet vers un fichier, et renvoie le nom du fichier en enlevant le chemin et l'extension.
 \end{description}
