@@ -59,4 +59,5 @@ void gal(DFAMIN dfa, char *name, char *exp) {
     fprintf(fd, "    return EXIT_SUCCESS;\n");
     fprintf(fd, "}\n");
     fprintf(fd, "\n");
+    fclose(fd);
 }

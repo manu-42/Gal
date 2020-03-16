@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "lecture.h"
 #include "arbre.h"
 #include "nfa.h"
@@ -44,6 +45,7 @@ int main(int argc, char **args) {
     char *exp = lecture(args[1]);
     printf("expression lue '%s'\n", exp);
     char *filename = get_filename(args[1]);
+    char *extname = malloc(sizeof(char) * (strlen(filename)+50));
     char *exp2 = add_concat(exp);
     printf("après modif '%s'\n", exp2);
     char *postfix = to_postfix(exp2);
@@ -51,7 +53,6 @@ int main(int argc, char **args) {
 
     printf("Conversion en arbre ...\n");
     TREE tree = npi_to_tree(postfix);
-    char *extname = malloc(sizeof(char) * (strlen(filename)+50));
     sprintf(extname, "dot_src/%s.tree", filename);
     if (gen_graph) {
         printf("Création de %s_tree.pdf ...\n", filename);
@@ -89,8 +90,11 @@ int main(int argc, char **args) {
     printf("Génération de l'analyseur lexical ...\n");
     sprintf(extname, "analyseur_src/%s.c", filename);
     gal(dfamin, extname, exp);
-    printf("Lancez 'gcc -o analyseur_bin/%s %s' pour compiler\n", filename, extname);
-
+    char *gccstring = malloc(sizeof(char) * (2*strlen(extname)+50));
+    sprintf(gccstring,"gcc -o analyseur_bin/%s %s", filename, extname);
+    system(gccstring);
+    printf("L'analyseur lexical a été généré.\n");
+    printf("Tapez 'analyseur_bin/%s mot' pour tester un mot.\n", filename);
     return EXIT_SUCCESS;
 }
 
